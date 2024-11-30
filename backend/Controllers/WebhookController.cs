@@ -1,4 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using backend.Models;
+using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
+using System;
 
 namespace WebhookApp.Controllers
 {
@@ -6,13 +9,16 @@ namespace WebhookApp.Controllers
     [Route("webhook")]
     public class WebhookController : ControllerBase
     {
+        public static object _lastPayload;
+
         [HttpPost]
         public IActionResult ReceiveWebhook([FromBody] object payload)
         {
-            // Log ou manipular o payload recebido
-            Console.WriteLine($"{payload}");
+            _lastPayload = payload;
 
-            // Retorna uma resposta de sucesso
+            Console.WriteLine($"{_lastPayload}");
+
+
             return Ok(new { Message = "Webhook recebido com sucesso!" });
         }
     }
