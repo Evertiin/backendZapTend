@@ -9,14 +9,14 @@ namespace WebhookApp.Controllers
     [Route("webhook")]
     public class WebhookController : ControllerBase
     {
-        public static object _lastPayload;
+        public static WebhookEvent _lastPayload { get; set; }
 
         [HttpPost]
-        public IActionResult ReceiveWebhook([FromBody] object payload)
+        public IActionResult ReceiveWebhook([FromBody] WebhookEvent payload)
         {
             _lastPayload = payload;
 
-            Console.WriteLine($"{_lastPayload}");
+           // Console.WriteLine($"Evento: {payload.ToString()}");
 
 
             return Ok(new { Message = "Webhook recebido com sucesso!" });

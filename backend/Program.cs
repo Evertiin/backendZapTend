@@ -2,6 +2,7 @@ using backend.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
+using WebhookApp.Controllers;
 
 namespace backend
 {
@@ -24,6 +25,9 @@ namespace backend
             var app = builder.Build();
             app.UseStaticFiles();
 
+            #region APis
+            
+            //Endpoint pra criar instancia
             app.MapPost("api/createinstance", async (CreateInstanceDto dto, IHttpClientFactory httpClientFactory) =>
             {
                 
@@ -45,15 +49,22 @@ namespace backend
 
                 
                 var response = await client.PostAsync("https://evolutionzap.apievolution.shop/instance/create", postForm);
+                
                 if (!response.IsSuccessStatusCode)
                 {
                     
                     return Results.BadRequest(response);
                 }
 
-                
-                return Results.Ok(response);
+                //JsonConvert.DeserializeObject<T>()
+                var responseBody = await response.Content.ReadAsStringAsync();
+                return Results.Ok(responseBody);
             });
+
+            
+
+            #endregion
+
             app.UseHttpsRedirection();
             app.UseCors("AllowAll");
             app.MapControllers();
