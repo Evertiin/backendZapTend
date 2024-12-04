@@ -14,6 +14,7 @@ namespace backend
             var builder = WebApplication.CreateBuilder(args);
             builder.Services.AddControllers();
             builder.Services.AddHttpClient();
+            builder.Services.AddHttpClient();
             builder.Services.AddCors(options =>
             {
                 options.AddPolicy("AllowAll", policy =>
@@ -115,6 +116,7 @@ namespace backend
             #endregion
 
             #region API Webhook
+            //Endpoint pra ativar webhook
             app.MapPost("api/webhookactive/{instanceName}", async (string instanceName, IHttpClientFactory httpClientFactory) =>
             {
 
@@ -136,7 +138,7 @@ namespace backend
                 };
                 string json = JsonConvert.SerializeObject(webhookRequest);
 
-                // Cria o conteúdo da requisição com JSON
+                
                 var jsonContent = new StringContent(json, Encoding.UTF8, "application/json");
 
                 var response = await client.PostAsync($"https://evolutionzap.apievolution.shop/webhook/set/{instanceName}", jsonContent);
@@ -152,7 +154,7 @@ namespace backend
 
             #endregion
 
-            app.UseHttpsRedirection();
+            //app.UseHttpsRedirection();
             app.UseCors("AllowAll");
             app.MapControllers();
             app.Run();
