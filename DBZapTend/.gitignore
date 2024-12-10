@@ -1,0 +1,50 @@
+﻿# Compilação do Visual Studio
+.vs/
+*.user
+*.suo
+*.cache
+*.aps
+
+# Diretórios de saída de compilação
+bin/
+obj/
+
+# Logs, resultados de testes e banco de dados local
+*.log
+TestResults/
+*.mdf
+*.ldf
+*.sqlite
+
+# Configurações do Visual Studio
+*.ideworkspace
+*.vscode
+launchSettings.json
+.vs/
+
+
+# Configurações do Rider/JetBrains
+.idea/
+*.iml
+*.sln.iml
+
+# Arquivos do sistema operacional
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Certificados HTTPS locais
+*.pfx
+*.p12
+
+# Configuração do Docker
+**/docker-compose.*
+docker-compose.override.*
+*.dockerignore
+
+# Configurações do Azure
+*.PublishSettings
+.packages
+
+# Arquivos gerados pela Build do ASP.NET
+appsettings.Development.json
