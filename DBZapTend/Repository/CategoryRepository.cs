@@ -1,4 +1,7 @@
 ﻿using DBZapTend.Models;
+using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace DBZapTend.Repository
 {
@@ -11,9 +14,9 @@ namespace DBZapTend.Repository
               _context = context;
         }
 
-        public IEnumerable<Category> GetCategorys()
+        public async Task <IEnumerable<Category>> GetCategorys()
         {
-            return _context.Categories.ToList();
+            return await _context.Categories.ToListAsync();
         }
 
         public Category GetCategory(int id)
@@ -21,10 +24,18 @@ namespace DBZapTend.Repository
             throw new NotImplementedException();
         }
 
-        public Category CreateCategory(Category category)
+        public async Task<Category> CreateCategory(Category category)
         {
-            throw new NotImplementedException();
+            
+            _context.Categories.Add(category);
+
+            
+            await _context.SaveChangesAsync();
+
+            
+            return category;
         }
+
         public Category UpdateCategory(Category category)
         {
             throw new NotImplementedException();

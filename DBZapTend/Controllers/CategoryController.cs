@@ -1,6 +1,7 @@
 ﻿using DBZapTend.Models;
 using DBZapTend.Repository;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace DBZapTend.Controllers
 {
@@ -16,10 +17,20 @@ namespace DBZapTend.Controllers
         }
 
         [HttpGet]
-        public ActionResult <IEnumerable<Category>> Get()
+        public async Task<ActionResult<IEnumerable<Category>>> Get()
         {
-            var category = _repository.GetCategorys();
+            var category = await _repository.GetCategorys();
             return Ok(category);
         }
+
+        [HttpPost]
+        public async Task<ActionResult<Category>> CreateCategoryy(Category category)
+        {
+            var createdCategory =  await _repository.CreateCategory(category);
+
+            
+            return Ok(createdCategory);
+        }
+
     }
 }
