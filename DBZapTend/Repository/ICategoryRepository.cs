@@ -6,13 +6,13 @@ namespace DBZapTend.Repository
     {
         Task <IEnumerable<Category>> GetCategorys();
 
-        Category GetCategory (int id);
+        Task <Category> GetCategory (int id);
 
         Task <Category> CreateCategory (Category category);
 
-        Category UpdateCategory(Category category);
+        Task <Category> UpdateCategory(Category category);
 
-        Category DeleteCategory(int id);
+        Task <Category> DeleteCategory(int id);
 
     }
 }

@@ -36,7 +36,7 @@ public partial class DbzapContext : DbContext
     public virtual DbSet<Variavei> Variaveis { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        => optionsBuilder.UseNpgsql("Host=node6793-serverstar.users.scale.virtualcloud.com.br;Database=dbzap;Username=postgres;Password=staranytecheverton");
+        => optionsBuilder.UseNpgsql("Host=localhost;Database=dbzap;Username=postgres;Password=1010");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

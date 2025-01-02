@@ -19,13 +19,18 @@ namespace DBZapTend.Repository
             return await _context.Categories.ToListAsync();
         }
 
-        public Category GetCategory(int id)
+        public  async Task <Category> GetCategory(int id) 
         {
-            throw new NotImplementedException();
+           return await _context.Categories.FirstOrDefaultAsync(p => p.IdCategory == id);
+
+           
         }
 
         public async Task<Category> CreateCategory(Category category)
         {
+            if (category is null) 
+               throw new ArgumentNullException(nameof(category));
+            
             
             _context.Categories.Add(category);
 
@@ -36,14 +41,33 @@ namespace DBZapTend.Repository
             return category;
         }
 
-        public Category UpdateCategory(Category category)
+        public async Task <Category> UpdateCategory(Category category)
         {
-            throw new NotImplementedException();
+            if (category is null)
+                throw new ArgumentNullException(nameof(category));
+
+            _context.Categories.Entry(category).State = EntityState.Modified;
+
+
+            await _context.SaveChangesAsync();
+
+
+            return category;
         }
 
-        public Category DeleteCategory(int id)
+        public async Task <Category> DeleteCategory(int id)
         {
-            throw new NotImplementedException();
+            var category =  await _context.Categories.FindAsync(id);
+
+            if (category is null)
+                throw new ArgumentNullException(nameof(category));
+
+
+            _context.Categories.Remove(category);
+
+            await _context.SaveChangesAsync();
+
+            return category;
         }
 
     }

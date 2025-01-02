@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 
 namespace DBZapTend.Models;
 
@@ -14,6 +15,6 @@ public partial class Variavei
     public int? PromptsIdPrompts { get; set; }
 
     public virtual Prompt? PromptsIdPromptsNavigation { get; set; }
-
+    [JsonIgnore]
     public virtual ICollection<ValoresVariavei> ValoresVariaveis { get; set; } = new List<ValoresVariavei>();
 }
