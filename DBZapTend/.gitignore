@@ -1,50 +1,31 @@
-﻿# Compilação do Visual Studio
-.vs/
-*.user
-*.suo
-*.cache
-*.aps
-
-# Diretórios de saída de compilação
+﻿# Ignorar pastas de build e dependências
 bin/
 obj/
 
-# Logs, resultados de testes e banco de dados local
-*.log
-TestResults/
-*.mdf
-*.ldf
-*.sqlite
-
-# Configurações do Visual Studio
-*.ideworkspace
-*.vscode
-launchSettings.json
-.vs/
-
-
-# Configurações do Rider/JetBrains
-.idea/
-*.iml
-*.sln.iml
-
-# Arquivos do sistema operacional
-.DS_Store
-Thumbs.db
-desktop.ini
-
-# Certificados HTTPS locais
-*.pfx
-*.p12
-
-# Configuração do Docker
-**/docker-compose.*
-docker-compose.override.*
-*.dockerignore
-
-# Configurações do Azure
-*.PublishSettings
-.packages
-
-# Arquivos gerados pela Build do ASP.NET
+# Ignorar arquivos de configuração local
 appsettings.Development.json
+
+# Ignorar arquivos de usuário específicos do Visual Studio
+*.user
+*.suo
+
+# Ignorar logs e arquivos temporários
+*.log
+*.tmp
+
+# Ignorar arquivos de depuração
+*.pdb
+*.exe
+*.dll
+
+# Ignorar pastas de pacotes NuGet
+.nuget/
+packages/
+
+# Ignorar arquivos de ambiente
+.env
+.env.local
+
+# Ignorar arquivos gerados pelo IDE
+.vs/
+.vscode/
