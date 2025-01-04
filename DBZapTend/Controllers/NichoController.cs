@@ -27,7 +27,7 @@ namespace DBZapTend.Controllers
         {
             if (nicho is null)
             {
-                return BadRequest("Dados inválidos");
+                return BadRequest("Dados inválido");
             }
 
             var createdNicho = await _repository.CreateNicho(nicho);
