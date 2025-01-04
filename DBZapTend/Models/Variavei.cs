@@ -15,6 +15,6 @@ public partial class Variavei
     public int? PromptsIdPrompts { get; set; }
 
     public virtual Prompt? PromptsIdPromptsNavigation { get; set; }
-    [JsonIgnore]
+    //[JsonIgnore]
     public virtual ICollection<ValoresVariavei> ValoresVariaveis { get; set; } = new List<ValoresVariavei>();
 }

@@ -11,10 +11,10 @@ public partial class Nicho
     public string Name { get; set; } = null!;
 
     public int? CategoryIdCategory { get; set; }
-
+    //[JsonIgnore]
     public virtual Category? CategoryIdCategoryNavigation { get; set; }
-    [JsonIgnore]
+    //[JsonIgnore]
     public virtual ICollection<Prompt> Prompts { get; set; } = new List<Prompt>();
-    [JsonIgnore]
+    //[JsonIgnore]
     public virtual ICollection<UserNicho> UserNichos { get; set; } = new List<UserNicho>();
 }

@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("DBZapTend")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+775ad7d902ce9b1f2cf46b7c290867cc37528baa")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+8a8286a0a0e64fc8701f487b985f396771161626")]
 [assembly: System.Reflection.AssemblyProductAttribute("DBZapTend")]
 [assembly: System.Reflection.AssemblyTitleAttribute("DBZapTend")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

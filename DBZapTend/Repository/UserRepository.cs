@@ -1,4 +1,5 @@
 ﻿using DBZapTend.Models;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.EntityFrameworkCore;
 
 namespace DBZapTend.Repository
@@ -13,11 +14,25 @@ namespace DBZapTend.Repository
         }
         public async Task<IEnumerable<User>> GetUsers()
         {
-            return await _context.Users.ToListAsync();
+            return await _context.Users.Include(u => u.Instances)
+                .Include(u => u.Payments)
+                .Include(u => u.Plans)
+                .Include(u => u.UserNichos)
+                .Include(u => u.ValoresVariaveis)
+                .ToListAsync();
         }
         public async Task<User> GetUser(int id)
         {
-            return await _context.Users.FirstOrDefaultAsync(p => p.Id == id);
+
+            var userWithInstances = await _context.Users
+             .Include(u => u.Instances)
+             .Include(u => u.Payments) 
+             .Include(u => u.Plans)    
+             .Include(u => u.UserNichos) 
+             .Include(u => u.ValoresVariaveis)
+             .FirstOrDefaultAsync(u => u.Id == id);
+
+            return userWithInstances;
         }
 
         public async Task<User> CreateUser(User user)

@@ -11,6 +11,6 @@ public partial class Category
 
     [Required(ErrorMessage = "O nome da categoria é obrigatório.")]
     public string Name { get; set; } = null!;
-    [JsonIgnore]
+    //[JsonIgnore]
     public virtual ICollection<Nicho> Nichos { get; set; } = new List<Nicho>();
 }

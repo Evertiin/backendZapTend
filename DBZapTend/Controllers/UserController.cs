@@ -66,14 +66,9 @@ namespace DBZapTend.Controllers
         [HttpDelete("{id:int}")]
         public async Task<ActionResult<User>> DeleteCategoryy(int id)
         {
-            var user = _repository.DeleteUser(id);
-
-            if (user == null)
-            {
-                return NotFound("Usuário não encontrada");
-            }
             var deleteUser = await _repository.DeleteUser(id);
-
+            if (deleteUser == null)
+                return NotFound("Usuário não encontrado");
 
             return Ok(deleteUser);
         }

@@ -15,8 +15,8 @@ public partial class Prompt
     public int? NichosIdNichos { get; set; }
 
     public virtual Nicho? NichosIdNichosNavigation { get; set; }
-    [JsonIgnore]
+    //[JsonIgnore]
     public virtual ICollection<ValoresVariavei> ValoresVariaveis { get; set; } = new List<ValoresVariavei>();
-    [JsonIgnore]
+    //[JsonIgnore]
     public virtual ICollection<Variavei> Variaveis { get; set; } = new List<Variavei>();
 }

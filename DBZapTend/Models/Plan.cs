@@ -15,7 +15,7 @@ public partial class Plan
     public int? UserId { get; set; }
 
     public DateTime DatePlan { get; set; }
-    [JsonIgnore]
+    //[JsonIgnore]
     public virtual ICollection<Payment> Payments { get; set; } = new List<Payment>();
 
     public virtual User? User { get; set; }

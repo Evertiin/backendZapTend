@@ -19,14 +19,14 @@ public partial class User
     public string Adress { get; set; } = null!;
 
     public string? IdAutentication { get; set; }
-    [JsonIgnore]
+    //[JsonIgnore]
     public virtual ICollection<Instance> Instances { get; set; } = new List<Instance>();
-    [JsonIgnore]
+    //[JsonIgnore]
     public virtual ICollection<Payment> Payments { get; set; } = new List<Payment>();
-    [JsonIgnore]
+    //[JsonIgnore]
     public virtual ICollection<Plan> Plans { get; set; } = new List<Plan>();
-    [JsonIgnore]
+    //[JsonIgnore]
     public virtual ICollection<UserNicho> UserNichos { get; set; } = new List<UserNicho>();
-    [JsonIgnore]
+    //[JsonIgnore]
     public virtual ICollection<ValoresVariavei> ValoresVariaveis { get; set; } = new List<ValoresVariavei>();
 }

@@ -16,12 +16,16 @@ namespace DBZapTend.Repository
 
         public async Task <IEnumerable<Category>> GetCategorys()
         {
-            return await _context.Categories.ToListAsync();
+            return await _context.Categories
+                .Include(u => u.Nichos)
+                .ToListAsync();
         }
 
         public  async Task <Category> GetCategory(int id) 
         {
-           return await _context.Categories.FirstOrDefaultAsync(p => p.IdCategory == id);
+           return await _context.Categories
+                .Include(u => u.Nichos)
+                .FirstOrDefaultAsync(p => p.IdCategory == id);
 
            
         }
