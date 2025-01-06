@@ -30,6 +30,8 @@ namespace DBZapTend
             builder.Services.AddScoped<IInstanceRepository, InstanceRepository>();
             builder.Services.AddScoped<INichosRepository, NichosRepository>();
             builder.Services.AddScoped<IPromptRepository, PromptRepository>();
+            builder.Services.AddScoped<IPlanRepository, PlanRepository>();
+            builder.Services.AddScoped<IPaymentRepository, PaymentRepository>();
 
 
             var app = builder.Build();
