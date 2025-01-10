@@ -36,6 +36,7 @@ public partial class DbzapContext : DbContext
     public virtual DbSet<Variavei> Variaveis { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
         => optionsBuilder.UseNpgsql("Host=localhost;Database=dbzap;Username=postgres;Password=1010");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -47,7 +48,9 @@ public partial class DbzapContext : DbContext
             entity.ToTable("Category", "mydb");
 
             entity.Property(e => e.IdCategory).HasColumnName("idCategory");
-            entity.Property(e => e.Name).HasMaxLength(45);
+            entity.Property(e => e.Name)
+                .IsRequired()
+                .HasMaxLength(45);
         });
 
         modelBuilder.Entity<Instance>(entity =>
@@ -56,8 +59,12 @@ public partial class DbzapContext : DbContext
 
             entity.ToTable("Instance", "mydb");
 
-            entity.Property(e => e.Name).HasMaxLength(45);
-            entity.Property(e => e.UserIduser).HasColumnName("user_iduser");
+            entity.Property(e => e.Name)
+                .IsRequired()
+                .HasMaxLength(45);
+            entity.Property(e => e.UserIduser)
+                .HasMaxLength(100)
+                .HasColumnName("user_iduser");
 
             entity.HasOne(d => d.UserIduserNavigation).WithMany(p => p.Instances)
                 .HasForeignKey(d => d.UserIduser)
@@ -72,7 +79,9 @@ public partial class DbzapContext : DbContext
 
             entity.Property(e => e.IdNichos).HasColumnName("idNichos");
             entity.Property(e => e.CategoryIdCategory).HasColumnName("Category_idCategory");
-            entity.Property(e => e.Name).HasMaxLength(45);
+            entity.Property(e => e.Name)
+                .IsRequired()
+                .HasMaxLength(45);
 
             entity.HasOne(d => d.CategoryIdCategoryNavigation).WithMany(p => p.Nichos)
                 .HasForeignKey(d => d.CategoryIdCategory)
@@ -86,12 +95,20 @@ public partial class DbzapContext : DbContext
             entity.ToTable("Payments", "mydb");
 
             entity.Property(e => e.IdPayments).HasColumnName("idPayments");
-            entity.Property(e => e.Cycle).HasMaxLength(45);
+            entity.Property(e => e.Cycle)
+                .IsRequired()
+                .HasMaxLength(45);
             entity.Property(e => e.Description).HasMaxLength(45);
-            entity.Property(e => e.DueDate).HasColumnType("timestamp without time zone");
+            entity.Property(e => e.DueDate)
+                .HasDefaultValueSql("CURRENT_TIMESTAMP")
+                .HasColumnType("timestamp without time zone");
             entity.Property(e => e.PlanId).HasColumnName("Plan_Id");
-            entity.Property(e => e.TypePayment).HasMaxLength(45);
-            entity.Property(e => e.UserId).HasColumnName("User_Id");
+            entity.Property(e => e.TypePayment)
+                .IsRequired()
+                .HasMaxLength(45);
+            entity.Property(e => e.UserId)
+                .HasMaxLength(100)
+                .HasColumnName("User_Id");
             entity.Property(e => e.ValuePayment).HasPrecision(10, 2);
 
             entity.HasOne(d => d.Plan).WithMany(p => p.Payments)
@@ -109,10 +126,17 @@ public partial class DbzapContext : DbContext
 
             entity.ToTable("Plan", "mydb");
 
-            entity.Property(e => e.DatePlan).HasColumnType("timestamp without time zone");
-            entity.Property(e => e.Name).HasMaxLength(45);
+            entity.Property(e => e.Name)
+                .IsRequired()
+                .HasMaxLength(45);
             entity.Property(e => e.Price).HasPrecision(10, 2);
-            entity.Property(e => e.UserId).HasColumnName("user_Id");
+            entity.Property(e => e.SubscribeAt)
+                .HasDefaultValueSql("CURRENT_TIMESTAMP")
+                .HasColumnType("timestamp without time zone")
+                .HasColumnName("subscribeAt");
+            entity.Property(e => e.UserId)
+                .HasMaxLength(100)
+                .HasColumnName("user_Id");
 
             entity.HasOne(d => d.User).WithMany(p => p.Plans)
                 .HasForeignKey(d => d.UserId)
@@ -126,8 +150,11 @@ public partial class DbzapContext : DbContext
             entity.ToTable("Prompts", "mydb");
 
             entity.Property(e => e.IdPrompts).HasColumnName("idPrompts");
+            entity.Property(e => e.Conteudo).IsRequired();
             entity.Property(e => e.NichosIdNichos).HasColumnName("Nichos_idNichos");
-            entity.Property(e => e.Title).HasMaxLength(45);
+            entity.Property(e => e.Title)
+                .IsRequired()
+                .HasMaxLength(45);
 
             entity.HasOne(d => d.NichosIdNichosNavigation).WithMany(p => p.Prompts)
                 .HasForeignKey(d => d.NichosIdNichos)
@@ -136,14 +163,33 @@ public partial class DbzapContext : DbContext
 
         modelBuilder.Entity<User>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("Id_UNIQUE");
+            entity.HasKey(e => e.IdAutentication).HasName("User_IdAutentication_pkey");
 
             entity.ToTable("User", "mydb");
 
-            entity.Property(e => e.Adress).HasMaxLength(100);
-            entity.Property(e => e.Email).HasMaxLength(45);
+            entity.HasIndex(e => e.IdAutentication, "User_IdAutentication_unique").IsUnique();
+
             entity.Property(e => e.IdAutentication).HasMaxLength(100);
-            entity.Property(e => e.Name).HasMaxLength(45);
+            entity.Property(e => e.Adress)
+                .IsRequired()
+                .HasMaxLength(100);
+            entity.Property(e => e.CreatedAt)
+                .HasDefaultValueSql("CURRENT_TIMESTAMP")
+                .HasColumnType("timestamp without time zone")
+                .HasColumnName("createdAt");
+            entity.Property(e => e.Email)
+                .IsRequired()
+                .HasMaxLength(45);
+            entity.Property(e => e.Id).ValueGeneratedOnAdd();
+            entity.Property(e => e.Name)
+                .IsRequired()
+                .HasMaxLength(45);
+            entity.Property(e => e.Password)
+                .HasMaxLength(255)
+                .HasColumnName("password");
+            entity.Property(e => e.Sobrenome)
+                .HasMaxLength(255)
+                .HasColumnName("sobrenome");
         });
 
         modelBuilder.Entity<UserNicho>(entity =>
@@ -154,7 +200,9 @@ public partial class DbzapContext : DbContext
 
             entity.Property(e => e.IdUserNichos).HasColumnName("idUser_Nichos");
             entity.Property(e => e.NichosIdNichos).HasColumnName("Nichos_idNichos");
-            entity.Property(e => e.UserId).HasColumnName("User_Id");
+            entity.Property(e => e.UserId)
+                .HasMaxLength(100)
+                .HasColumnName("User_Id");
 
             entity.HasOne(d => d.NichosIdNichosNavigation).WithMany(p => p.UserNichos)
                 .HasForeignKey(d => d.NichosIdNichos)
@@ -173,7 +221,10 @@ public partial class DbzapContext : DbContext
 
             entity.Property(e => e.IdValoresVariaveis).HasColumnName("idValores_Variaveis");
             entity.Property(e => e.PromptsIdPrompts).HasColumnName("Prompts_idPrompts");
-            entity.Property(e => e.UserId).HasColumnName("User_Id");
+            entity.Property(e => e.UserId)
+                .HasMaxLength(100)
+                .HasColumnName("User_Id");
+            entity.Property(e => e.Value).IsRequired();
             entity.Property(e => e.VariaveisIdVariaveis).HasColumnName("Variaveis_idVariaveis");
 
             entity.HasOne(d => d.PromptsIdPromptsNavigation).WithMany(p => p.ValoresVariaveis)
@@ -196,8 +247,12 @@ public partial class DbzapContext : DbContext
             entity.ToTable("Variaveis", "mydb");
 
             entity.Property(e => e.IdVariaveis).HasColumnName("idVariaveis");
-            entity.Property(e => e.Description).HasMaxLength(100);
-            entity.Property(e => e.Name).HasMaxLength(45);
+            entity.Property(e => e.Description)
+                .IsRequired()
+                .HasMaxLength(100);
+            entity.Property(e => e.Name)
+                .IsRequired()
+                .HasMaxLength(45);
             entity.Property(e => e.PromptsIdPrompts).HasColumnName("Prompts_idPrompts");
 
             entity.HasOne(d => d.PromptsIdPromptsNavigation).WithMany(p => p.Variaveis)

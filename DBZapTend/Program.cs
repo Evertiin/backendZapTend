@@ -1,7 +1,10 @@
 
 using DBZapTend.Models;
 using DBZapTend.Repository;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 namespace DBZapTend
 {
@@ -11,7 +14,7 @@ namespace DBZapTend
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            // Add services to the container.
+            string secretKey = "7bad2bc8-d308-4b8a-86b5-98ef1ac0f142";
 
             builder.Services.AddControllers()
                 .AddJsonOptions(options =>
@@ -36,6 +39,28 @@ namespace DBZapTend
             builder.Services.AddScoped<IValoresVariaveiRepository, ValoresVariaveiRepository>();
             builder.Services.AddScoped<IUserNichoRepository, UserNichoRepository>();
 
+            builder.Services.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            }).AddJwtBearer(options =>
+            {
+                options.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters()
+                {
+                    ValidateIssuer = true, 
+                    ValidateAudience = true, 
+                    ValidateLifetime = true, 
+                    ValidateIssuerSigningKey = true, 
+                    ValidIssuer = "StarAnyTech", 
+                    ValidAudience = "ZapTend", 
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey))
+
+
+                };
+            }
+            
+            );
+
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
@@ -46,8 +71,8 @@ namespace DBZapTend
             }
 
             //app.UseHttpsRedirection();
-
-            //app.UseAuthorization();
+            app.UseAuthentication();
+            app.UseAuthorization();
 
 
             app.MapControllers();

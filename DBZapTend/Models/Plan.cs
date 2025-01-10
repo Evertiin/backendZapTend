@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text.Json.Serialization;
 
 namespace DBZapTend.Models;
 
@@ -8,15 +7,15 @@ public partial class Plan
 {
     public int Id { get; set; }
 
-    public string Name { get; set; } = null!;
+    public string Name { get; set; }
 
     public decimal Price { get; set; }
 
-    public int? UserId { get; set; }
+    public string UserId { get; set; }
 
-    public DateTime DatePlan { get; set; }
-    //[JsonIgnore]
+    public DateTime? SubscribeAt { get; set; }
+
     public virtual ICollection<Payment> Payments { get; set; } = new List<Payment>();
 
-    public virtual User? User { get; set; }
+    public virtual User User { get; set; }
 }
