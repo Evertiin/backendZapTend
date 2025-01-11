@@ -10,11 +10,13 @@ namespace DBZapTend
 {
     public class Program
     {
+        public static string secretKey = "7bad2bc8-d308-4b8a-86b5-98ef1ac0f142";
         public static void Main(string[] args)
         {
+
             var builder = WebApplication.CreateBuilder(args);
 
-            string secretKey = "7bad2bc8-d308-4b8a-86b5-98ef1ac0f142";
+            
 
             builder.Services.AddControllers()
                 .AddJsonOptions(options =>

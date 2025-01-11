@@ -1,7 +1,13 @@
 ﻿using DBZapTend.Models;
 using DBZapTend.Repository;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
 
 namespace DBZapTend.Controllers
 {
@@ -9,20 +15,44 @@ namespace DBZapTend.Controllers
     [ApiController]
     public class LoginController : ControllerBase
     {
-        private readonly IUserRepository _repository;
+        private readonly DbzapContext _context;
 
-        public LoginController(IUserRepository repository)
+        public LoginController(DbzapContext context)
         {
-            _repository = repository;
+            _context = context;
         }
         [HttpPost]
-        public ActionResult<User> Login(User user)
+        public async Task <ActionResult<User>> Login(User user,string email,string idAuthentication)
         {
-            if (user.Email == "admin" && user.Password == "admin" )
+            var User = await _context.Users
+               .FirstOrDefaultAsync(u => u.Email == email && u.IdAutentication == idAuthentication);
+       
+            if (user.Email == email && user.IdAutentication == idAuthentication)
             {
-                return Ok(new {token = ""});
+                var token = GenerateTokenJWT();
+                return Ok(new { token,user});
             }
             return BadRequest();
+        }
+
+        private string GenerateTokenJWT()
+        {
+            string secretKey = Program.secretKey;
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey));
+            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+
+            var claims = new[]
+            {
+               new Claim("login", "admin"),
+            };
+            var token = new JwtSecurityToken(
+                issuer: "StarAnyTech",
+                audience: "ZapTend",
+                claims: claims,
+                expires: DateTime.Now.AddMinutes(30),
+                signingCredentials: creds);
+
+            return new JwtSecurityTokenHandler().WriteToken(token);
         }
 
     }
