@@ -24,15 +24,23 @@ namespace DBZapTend.Controllers
         [HttpPost]
         public async Task <ActionResult<User>> Login(User user,string email,string idAuthentication)
         {
+            if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(idAuthentication))
+            {
+                return BadRequest("Email e Id são obrigatórios.");
+            }
             var User = await _context.Users
                .FirstOrDefaultAsync(u => u.Email == email && u.IdAutentication == idAuthentication);
        
-            if (user.Email == email && user.IdAutentication == idAuthentication)
+            if (user != null)
             {
                 var token = GenerateTokenJWT();
                 return Ok(new { token,user});
             }
-            return BadRequest();
+            else
+            {
+                return NotFound("Usuário não cadastrado ou credenciais incorretas."); 
+            }
+            
         }
 
         private string GenerateTokenJWT()
