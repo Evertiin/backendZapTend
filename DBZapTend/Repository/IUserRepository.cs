@@ -6,12 +6,12 @@ namespace DBZapTend.Repository
     {
         Task<IEnumerable<User>> GetUsers();
 
-        Task<User> GetUser(int id);
+        Task<User> GetUser(string id);
 
         Task<User> CreateUser(User user);
 
         Task<User> UpdateUser(User user);
 
-        Task<User> DeleteUser(int id);
+        Task<User> DeleteUser(string id);
     }
 }

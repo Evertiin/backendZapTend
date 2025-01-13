@@ -1,6 +1,9 @@
 ﻿using DBZapTend.Models;
 using DBZapTend.Repository;
 using Microsoft.AspNetCore.Mvc;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace DBZapTend.Controllers
 {
@@ -14,63 +17,101 @@ namespace DBZapTend.Controllers
         {
             _repository = repository;
         }
+
         [HttpGet]
         public async Task<ActionResult<IEnumerable<User>>> Get()
         {
-            var category = await _repository.GetUsers();
-            return Ok(category);
+            try
+            {
+                var users = await _repository.GetUsers();
+                return Ok(users);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Erro interno ao buscar usuários: {ex.Message}");
+            }
         }
 
         [HttpPost]
         public async Task<ActionResult<User>> CreateUsers(User user)
         {
-            if (user is null)
+            try
             {
-                return BadRequest("Dados inválidos");
+                if (string.IsNullOrEmpty(user.Name) ||
+                    string.IsNullOrEmpty(user.Email) ||
+                    string.IsNullOrEmpty(user.Password) ||
+                    string.IsNullOrEmpty(user.Adress) ||
+                    string.IsNullOrEmpty(user.IdAutentication))
+                {
+                    return BadRequest("Dados inválidos");
+                }
+
+                var createdUser = await _repository.CreateUser(user);
+                return Ok(createdUser);
             }
-            var createdUser = await _repository.CreateUser(user);
-
-
-            return Ok(createdUser);
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Erro interno ao criar usuário: {ex.Message}");
+            }
         }
 
-        [HttpGet("{id:int}")]
-
-        public async Task<ActionResult<User>> GetUserId(int id)
+        [HttpGet("{id:minlength(3):maxlength(99)}")]
+        public async Task<ActionResult<User>> GetUserId(string id)
         {
-            var user = await _repository.GetUser(id);
-
-            if (user == null)
+            try
             {
-                return NotFound("Usuário não encontrado");
+                var user = await _repository.GetUser(id);
+
+                if (user == null)
+                {
+                    return NotFound("Usuário não encontrado");
+                }
+
+                return Ok(user);
             }
-
-
-            return Ok(user);
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Erro interno ao buscar usuário por ID: {ex.Message}");
+            }
         }
 
-        [HttpPut("{id:int}")]
-        public async Task<ActionResult<User>> UpdateUser(int id, User user)
+        [HttpPut("{id:minlength(3):maxlength(100)}")]
+        public async Task<ActionResult<User>> UpdateUser(string id, User user)
         {
-            if (id != user.Id)
+            try
             {
-                return BadRequest("Dados inválidos");
+                if (id != user.IdAutentication)
+                {
+                    return BadRequest("Dados inválidos");
+                }
+
+                var updateUser = await _repository.UpdateUser(user);
+                return Ok(updateUser);
             }
-
-            var updateUser = await _repository.UpdateUser(user);
-
-
-            return Ok(updateUser);
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Erro interno ao atualizar usuário: {ex.Message}");
+            }
         }
 
-        [HttpDelete("{id:int}")]
-        public async Task<ActionResult<User>> DeleteCategoryy(int id)
+        [HttpDelete("{id:minlength(3):maxlength(100)}")]
+        public async Task<ActionResult<User>> DeleteUser(string id)
         {
-            var deleteUser = await _repository.DeleteUser(id);
-            if (deleteUser == null)
-                return NotFound("Usuário não encontrado");
+            try
+            {
+                var deleteUser = await _repository.DeleteUser(id);
 
-            return Ok(deleteUser);
+                if (deleteUser == null)
+                {
+                    return NotFound("Usuário não encontrado");
+                }
+
+                return Ok(deleteUser);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Erro interno ao deletar usuário: {ex.Message}");
+            }
         }
     }
 }

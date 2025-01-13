@@ -1,6 +1,9 @@
 ﻿using DBZapTend.Models;
 using DBZapTend.Repository;
 using Microsoft.AspNetCore.Mvc;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace DBZapTend.Controllers
 {
@@ -18,65 +21,94 @@ namespace DBZapTend.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<ValoresVariavei>>> GetValoresVariaveis()
         {
-            var valores = await _repository.GetValoresVariaveis();
-            return Ok(valores);
+            try
+            {
+                var valores = await _repository.GetValoresVariaveis();
+                return Ok(valores);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Erro interno ao buscar valores variáveis: {ex.Message}");
+            }
         }
 
         [HttpPost]
         public async Task<ActionResult<ValoresVariavei>> CreateValoresVariaveis(ValoresVariavei valores)
         {
-            if (valores is null)
+            try
             {
-                return BadRequest("Dados inválidos");
+                if (valores is null)
+                {
+                    return BadRequest("Dados inválidos");
+                }
+
+                var createdValores = await _repository.CreateValoresVariaveis(valores);
+                return Ok(createdValores);
             }
-            var createdValores = await _repository.CreateValoresVariaveis(valores);
-
-
-            return Ok(createdValores);
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Erro interno ao criar valores variáveis: {ex.Message}");
+            }
         }
 
         [HttpGet("{id:int}")]
-
         public async Task<ActionResult<ValoresVariavei>> GetValoresVariaveisId(int id)
         {
-            var valores = await _repository.GetValoresVariavei(id);
-
-            if (valores == null)
+            try
             {
-                return NotFound("Variavel não encontrada");
+                var valores = await _repository.GetValoresVariavei(id);
+
+                if (valores == null)
+                {
+                    return NotFound("Variável não encontrada");
+                }
+
+                return Ok(valores);
             }
-
-
-            return Ok(valores);
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Erro interno ao buscar valor variável por ID: {ex.Message}");
+            }
         }
 
         [HttpPut("{id:int}")]
         public async Task<ActionResult<ValoresVariavei>> UpdateValoresVariaveis(int id, ValoresVariavei valores)
         {
-            if (id != valores.IdValoresVariaveis)
+            try
             {
-                return BadRequest("Dados inválidos");
+                if (id != valores.IdValoresVariaveis)
+                {
+                    return BadRequest("Dados inválidos");
+                }
+
+                var updateValores = await _repository.UpdateValoresVariaveis(valores);
+                return Ok(updateValores);
             }
-
-            var updateValores = await _repository.CreateValoresVariaveis(valores);
-
-
-            return Ok(updateValores);
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Erro interno ao atualizar valores variáveis: {ex.Message}");
+            }
         }
 
         [HttpDelete("{id:int}")]
         public async Task<ActionResult<ValoresVariavei>> DeleteValoresVariaveis(int id)
         {
-            var valores = _repository.GetValoresVariavei(id);
-
-            if (valores == null)
+            try
             {
-                return NotFound("Variavel não encontrada");
+                var valores = await _repository.GetValoresVariavei(id);
+
+                if (valores == null)
+                {
+                    return NotFound("Variável não encontrada");
+                }
+
+                var deleteValores = await _repository.DeleteValoresVariaveis(id);
+                return Ok(deleteValores);
             }
-            var deleteValores = await _repository.DeleteValoresVariaveis(id);
-
-
-            return Ok(deleteValores);
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Erro interno ao deletar valores variáveis: {ex.Message}");
+            }
         }
     }
 }

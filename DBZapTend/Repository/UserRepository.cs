@@ -21,7 +21,7 @@ namespace DBZapTend.Repository
                 .Include(u => u.ValoresVariaveis)
                 .ToListAsync();
         }
-        public async Task<User> GetUser(int id)
+        public async Task<User> GetUser(string id)
         {
 
             var userWithInstances = await _context.Users
@@ -30,7 +30,7 @@ namespace DBZapTend.Repository
              .Include(u => u.Plans)    
              .Include(u => u.UserNichos) 
              .Include(u => u.ValoresVariaveis)
-             .FirstOrDefaultAsync(u => u.Id == id);
+             .FirstOrDefaultAsync(u => u.IdAutentication == id);
 
             return userWithInstances;
         }
@@ -58,7 +58,7 @@ namespace DBZapTend.Repository
 
             return user;
         }
-        public async Task<User> DeleteUser(int id)
+        public async Task<User> DeleteUser(string id)
         {
             var user = await _context.Users.FindAsync(id);
 

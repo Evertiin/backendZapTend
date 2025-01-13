@@ -1,6 +1,9 @@
 ﻿using DBZapTend.Models;
 using DBZapTend.Repository;
 using Microsoft.AspNetCore.Mvc;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace DBZapTend.Controllers
 {
@@ -14,68 +17,98 @@ namespace DBZapTend.Controllers
         {
             _repository = repository;
         }
+
         [HttpGet]
         public async Task<ActionResult<IEnumerable<UserNicho>>> GetUserNichos()
         {
-            var userNicho = await _repository.GetUserNichos();
-            return Ok(userNicho);
+            try
+            {
+                var userNichos = await _repository.GetUserNichos();
+                return Ok(userNichos);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Erro interno ao buscar UserNichos: {ex.Message}");
+            }
         }
 
         [HttpPost]
         public async Task<ActionResult<UserNicho>> CreateUserNicho(UserNicho userNicho)
         {
-            if (userNicho is null)
+            try
             {
-                return BadRequest("Dados inválidos");
+                if (userNicho is null)
+                {
+                    return BadRequest("Dados inválidos");
+                }
+
+                var createdUserNicho = await _repository.CreateUserNicho(userNicho);
+                return Ok(createdUserNicho);
             }
-            var createdUserNicho = await _repository.CreateUserNicho(userNicho);
-
-
-            return Ok(createdUserNicho);
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Erro interno ao criar UserNicho: {ex.Message}");
+            }
         }
 
         [HttpGet("{id:int}")]
-
         public async Task<ActionResult<UserNicho>> GetUserNichoId(int id)
         {
-            var userNicho = await _repository.GetUserNicho(id);
-
-            if (userNicho == null)
+            try
             {
-                return NotFound("Não encontrado");
+                var userNicho = await _repository.GetUserNicho(id);
+
+                if (userNicho == null)
+                {
+                    return NotFound("UserNicho não encontrado");
+                }
+
+                return Ok(userNicho);
             }
-
-
-            return Ok(userNicho);
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Erro interno ao buscar UserNicho por ID: {ex.Message}");
+            }
         }
 
         [HttpPut("{id:int}")]
         public async Task<ActionResult<UserNicho>> UpdateUserNichos(int id, UserNicho userNicho)
         {
-            if (id != userNicho.IdUserNichos)
+            try
             {
-                return BadRequest("Dados inválidos");
+                if (id != userNicho.IdUserNichos)
+                {
+                    return BadRequest("Dados inválidos");
+                }
+
+                var updateUserNicho = await _repository.UpdateUserNicho(userNicho);
+                return Ok(updateUserNicho);
             }
-
-            var updateUserNicho = await _repository.CreateUserNicho(userNicho);
-
-
-            return Ok(updateUserNicho);
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Erro interno ao atualizar UserNicho: {ex.Message}");
+            }
         }
 
         [HttpDelete("{id:int}")]
         public async Task<ActionResult<UserNicho>> DeleteUserNichos(int id)
         {
-            var userNicho = _repository.GetUserNicho(id);
-
-            if (userNicho == null)
+            try
             {
-                return NotFound("Não encontrada");
+                var userNicho = await _repository.GetUserNicho(id);
+
+                if (userNicho == null)
+                {
+                    return NotFound("UserNicho não encontrado");
+                }
+
+                var deleteUserNicho = await _repository.DeleteUserNicho(id);
+                return Ok(deleteUserNicho);
             }
-            var deleteUserNicho = await _repository.DeleteUserNicho(id);
-
-
-            return Ok(deleteUserNicho);
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Erro interno ao deletar UserNicho: {ex.Message}");
+            }
         }
     }
 }

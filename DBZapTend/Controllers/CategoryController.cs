@@ -1,8 +1,13 @@
-﻿using DBZapTend.Models;
+﻿using DBZapTend.Logs;
+using DBZapTend.Models;
 using DBZapTend.Repository;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace DBZapTend.Controllers
 {
@@ -21,68 +26,96 @@ namespace DBZapTend.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Category>>> Get()
         {
-            var category = await _repository.GetCategorys();
-            return Ok(category);
+            try
+            {
+                var categories = await _repository.GetCategorys();
+                await Log.LogToFile("log_", "");
+                return Ok(categories);
+                
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Erro interno do servidor: {ex.Message}");
+            }
         }
 
         [HttpPost]
         public async Task<ActionResult<Category>> CreateCategoryy(Category category)
         {
-            if (category is null)
+            try
             {
-                return BadRequest("Dados inválidos");
+                if (category is null)
+                {
+                    return BadRequest("Dados inválidos");
+                }
+
+                var createdCategory = await _repository.CreateCategory(category);
+                return Ok(createdCategory);
             }
-
-            var createdCategory =  await _repository.CreateCategory(category);
-
-            
-            return Ok(createdCategory);
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Erro interno do servidor: {ex.Message}");
+            }
         }
 
         [HttpGet("{id:int}")]
-
         public async Task<ActionResult<Category>> GetCategoryId(int id)
         {
-            var category = await _repository.GetCategory(id);
-
-            if (category == null)
+            try
             {
-                return NotFound("Categoria não encontrada");
+                var category = await _repository.GetCategory(id);
+
+                if (category == null)
+                {
+                    return NotFound("Categoria não encontrada");
+                }
+
+                return Ok(category);
             }
-
-
-            return Ok(category);
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Erro interno do servidor: {ex.Message}");
+            }
         }
 
         [HttpPut("{id:int}")]
-        public async Task<ActionResult<Category>> UpdateCategoryy(int id,Category category)
+        public async Task<ActionResult<Category>> UpdateCategoryy(int id, Category category)
         {
-            if (id != category.IdCategory)
+            try
             {
-                return BadRequest("Dados inválidos");
+                if (id != category.IdCategory)
+                {
+                    return BadRequest("Dados inválidos");
+                }
+
+                var updatedCategory = await _repository.UpdateCategory(category);
+                return Ok(updatedCategory);
             }
-
-            var updateCategory = await _repository.UpdateCategory(category);
-
-
-            return Ok(updateCategory);
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Erro interno do servidor: {ex.Message}");
+            }
         }
 
-       [HttpDelete("{id:int}")]
+        [HttpDelete("{id:int}")]
         public async Task<ActionResult<Category>> DeleteCategoryy(int id)
         {
-            var category = _repository.GetCategory(id);
-
-            if (category == null)
+            try
             {
-                return NotFound("Categoria não encontrada");
+                var category = await _repository.GetCategory(id);
+
+                if (category == null)
+                {
+                    return NotFound("Categoria não encontrada");
+                }
+
+                var deletedCategory = await _repository.DeleteCategory(id);
+                return Ok(deletedCategory);
             }
-            var deleteCategory = await _repository.DeleteCategory(id);
-
-
-            return Ok(deleteCategory);
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Erro interno do servidor: {ex.Message}");
+            }
         }
-
-
     }
 }

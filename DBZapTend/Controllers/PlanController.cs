@@ -1,6 +1,9 @@
 ﻿using DBZapTend.Models;
 using DBZapTend.Repository;
 using Microsoft.AspNetCore.Mvc;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace DBZapTend.Controllers
 {
@@ -18,65 +21,94 @@ namespace DBZapTend.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Plan>>> GetPlans()
         {
-            var plan = await _repository.GetPlans();
-            return Ok(plan);
+            try
+            {
+                var plan = await _repository.GetPlans();
+                return Ok(plan);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Erro interno ao buscar planos: {ex.Message}");
+            }
         }
 
         [HttpPost]
         public async Task<ActionResult<Plan>> CreatePlan(Plan plan)
         {
-            if (plan is null)
+            try
             {
-                return BadRequest("Dados inválidos");
+                if (plan is null)
+                {
+                    return BadRequest("Dados inválidos");
+                }
+
+                var createdPlan = await _repository.CreatePlan(plan);
+                return Ok(createdPlan);
             }
-            var createdPlan = await _repository.CreatePlan(plan);
-
-
-            return Ok(createdPlan);
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Erro interno ao criar plano: {ex.Message}");
+            }
         }
 
         [HttpGet("{id:int}")]
-
         public async Task<ActionResult<Plan>> GetPlanId(int id)
         {
-            var plan = await _repository.GetPlan(id);
-
-            if (plan == null)
+            try
             {
-                return NotFound("Plano não encontrado");
+                var plan = await _repository.GetPlan(id);
+
+                if (plan == null)
+                {
+                    return NotFound("Plano não encontrado");
+                }
+
+                return Ok(plan);
             }
-
-
-            return Ok(plan);
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Erro interno ao buscar plano por ID: {ex.Message}");
+            }
         }
 
         [HttpPut("{id:int}")]
         public async Task<ActionResult<Plan>> UpdatePlan(int id, Plan plan)
         {
-            if (id != plan.Id)
+            try
             {
-                return BadRequest("Dados inválidos");
+                if (id != plan.Id)
+                {
+                    return BadRequest("Dados inválidos");
+                }
+
+                var updatePlan = await _repository.UpdatePlan(plan);
+                return Ok(updatePlan);
             }
-
-            var updatePlan = await _repository.UpdatePlan(plan);
-
-
-            return Ok(updatePlan);
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Erro interno ao atualizar plano: {ex.Message}");
+            }
         }
 
         [HttpDelete("{id:int}")]
         public async Task<ActionResult<Plan>> DeletePlan(int id)
         {
-            var plan = _repository.GetPlan(id);
-
-            if (plan == null)
+            try
             {
-                return NotFound("Plano não encontrado");
+                var plan = await _repository.GetPlan(id);
+
+                if (plan == null)
+                {
+                    return NotFound("Plano não encontrado");
+                }
+
+                var deletePlan = await _repository.DeletePlan(id);
+                return Ok(deletePlan);
             }
-            var deletePlan = await _repository.DeletePlan(id);
-
-
-            return Ok(deletePlan);
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Erro interno ao deletar plano: {ex.Message}");
+            }
         }
     }
 }
