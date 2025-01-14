@@ -1,4 +1,6 @@
-﻿using DBZapTend.Models;
+﻿using DBZapTend.DTO;
+using DBZapTend.Logs;
+using DBZapTend.Models;
 using DBZapTend.Repository;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -35,22 +37,22 @@ namespace DBZapTend.Controllers
         [HttpPost]
         public async Task<ActionResult<User>> CreateUsers(User user)
         {
+            if (!ModelState.IsValid)
+            {
+                await Log.LogToFile("log_", $"COD:1002-4 ,Dados inválidos");
+                return BadRequest("COD:1002-4 ,Dados inválidos");
+            }
+
             try
             {
-                if (string.IsNullOrEmpty(user.Name) ||
-                    string.IsNullOrEmpty(user.Email) ||
-                    string.IsNullOrEmpty(user.Password) ||
-                    string.IsNullOrEmpty(user.Adress) ||
-                    string.IsNullOrEmpty(user.IdAutentication))
-                {
-                    return BadRequest("Dados inválidos");
-                }
-
                 var createdUser = await _repository.CreateUser(user);
+
+                await Log.LogToFile("log_", $"COD:1002-2 ,Usuário criado com sucesso");
                 return Ok(createdUser);
             }
             catch (Exception ex)
             {
+                await Log.LogToFile("log_", $"COD:1001-5 ,Erro interno do servidor: {ex.Message}");
                 return StatusCode(500, $"Erro interno ao criar usuário: {ex.Message}");
             }
         }
@@ -75,17 +77,17 @@ namespace DBZapTend.Controllers
             }
         }
 
-        [HttpPut("{id:minlength(3):maxlength(100)}")]
-        public async Task<ActionResult<User>> UpdateUser(string id, User user)
+        [HttpPatch("{id:minlength(3):maxlength(100)}")]
+        public async Task<ActionResult<User>> UpdateUser(string id, UpdateUserDto user)
         {
             try
             {
-                if (id != user.IdAutentication)
+                if (user == null)
                 {
                     return BadRequest("Dados inválidos");
                 }
 
-                var updateUser = await _repository.UpdateUser(user);
+                var updateUser = await _repository.UpdateUsers(id,user);
                 return Ok(updateUser);
             }
             catch (Exception ex)

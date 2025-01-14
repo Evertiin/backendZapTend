@@ -1,4 +1,5 @@
-﻿using DBZapTend.Models;
+﻿using DBZapTend.DTO;
+using DBZapTend.Models;
 
 namespace DBZapTend.Repository
 {
@@ -10,7 +11,7 @@ namespace DBZapTend.Repository
 
         Task<User> CreateUser(User user);
 
-        Task<User> UpdateUser(User user);
+        Task<User> UpdateUsers(string id,UpdateUserDto user);
 
         Task<User> DeleteUser(string id);
     }

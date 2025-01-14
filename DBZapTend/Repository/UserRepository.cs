@@ -1,4 +1,5 @@
-﻿using DBZapTend.Models;
+﻿using DBZapTend.DTO;
+using DBZapTend.Models;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.EntityFrameworkCore;
 
@@ -45,18 +46,50 @@ namespace DBZapTend.Repository
 
             return user;
         }
-        public async Task<User> UpdateUser(User user)
+        public async Task<User> UpdateUsers(string id,UpdateUserDto user)
+
         {
-            if (user is null)
-                throw new ArgumentNullException(nameof(user));
+            var findUser = await _context.Users.FindAsync(id);
 
-            _context.Users.Entry(user).State = EntityState.Modified;
+            if (findUser is null)
+                throw new ArgumentNullException(nameof(findUser));
+
+            
+            if (user == null)
+            {
+                throw new ArgumentException("Usuário não encontrado.");
+            }
 
 
+            if (!string.IsNullOrWhiteSpace(user.Name))
+            {
+                findUser.Name = user.Name;
+            }
+
+            if (!string.IsNullOrWhiteSpace(user.Email))
+            {
+                findUser.Email = user.Email;
+            }
+
+            if (user.CpfCnpj.HasValue) 
+            {
+                findUser.CpfCnpj = user.CpfCnpj.Value;
+            }
+
+            if (user.Telephone.HasValue)
+            {
+                findUser.Telephone = user.Telephone.Value;
+            }
+
+            if (!string.IsNullOrWhiteSpace(user.Adress))
+            {
+                findUser.Adress = user.Adress;
+            }
+            
             await _context.SaveChangesAsync();
 
-
-            return user;
+            
+            return findUser;
         }
         public async Task<User> DeleteUser(string id)
         {
@@ -73,6 +106,9 @@ namespace DBZapTend.Repository
             return user;
         }
 
-        
+        public Task<User> UpdateUser(string id, User user)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

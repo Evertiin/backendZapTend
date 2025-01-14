@@ -32,7 +32,7 @@ namespace DBZapTend.Controllers
             }
             catch (Exception ex)
             {
-                await Log.LogToFile("log_", $"Erro interno do servidor: {ex.Message}");
+                await Log.LogToFile("log_", $"COD:1002-5 ,Erro interno do servidor: {ex.Message}");
                 return StatusCode(500, $"Erro interno do servidor: {ex.Message}");
             }
         }
@@ -56,7 +56,7 @@ namespace DBZapTend.Controllers
             }
             catch (Exception ex)
             {
-                await Log.LogToFile("log_", ex.Message);
+                await Log.LogToFile("log_", $"COD:1002-5 ,Erro interno do servidor: {ex.Message}");
                 return StatusCode(500, $"Erro interno do servidor: {ex.Message}");
             }
         }
@@ -78,7 +78,7 @@ namespace DBZapTend.Controllers
             }
             catch (Exception ex)
             {
-                await Log.LogToFile("log_", $"Erro interno do servidor: {ex.Message}");
+                await Log.LogToFile("log_", $"COD:1002-5 ,Erro interno do servidor: {ex.Message}");
                 return StatusCode(500, $"Erro interno do servidor: {ex.Message}");
             }
         }
@@ -106,7 +106,7 @@ namespace DBZapTend.Controllers
             }
             catch (Exception ex)
             {
-                await Log.LogToFile("log_", $"Erro interno do servidor: {ex.Message}");
+                await Log.LogToFile("log_", $"COD:1002-5 ,Erro interno do servidor: {ex.Message}");
                 return StatusCode(500, $"Erro interno do servidor: {ex.Message}");
             }
         }
@@ -130,7 +130,7 @@ namespace DBZapTend.Controllers
             }
             catch (Exception ex)
             {
-                await Log.LogToFile("log_", $"Erro interno do servidor: {ex.Message}");
+                await Log.LogToFile("log_", $"COD:1002-5 ,Erro interno do servidor: {ex.Message}");
                 return StatusCode(500, $"Erro interno do servidor: {ex.Message}");
             }
         }
