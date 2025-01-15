@@ -187,6 +187,7 @@ public partial class DbzapContext : DbContext
             entity.Property(e => e.Password)
                 .HasMaxLength(255)
                 .HasColumnName("password");
+            entity.Property(e => e.Role).HasMaxLength(50);
             entity.Property(e => e.Sobrenome)
                 .HasMaxLength(255)
                 .HasColumnName("sobrenome");

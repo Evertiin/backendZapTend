@@ -38,14 +38,8 @@ namespace DBZapTend.Repository
         }
         public async Task<Prompt> UpdatePrompt(Prompt prompt)
         {
-            if (prompt is null)
-                throw new ArgumentNullException(nameof(prompt));
-
-            _context.Prompts.Entry(prompt).State = EntityState.Modified;
-
-
+            _context.Prompts.Update(prompt);
             await _context.SaveChangesAsync();
-
 
             return prompt;
         }

@@ -1,4 +1,5 @@
-﻿using DBZapTend.Models;
+﻿using DBZapTend.DTO;
+using DBZapTend.Models;
 using DBZapTend.Repository;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -71,23 +72,34 @@ namespace DBZapTend.Controllers
             }
         }
 
-        [HttpPut("{id:int}")]
-        public async Task<ActionResult<Prompt>> UpdatePrompt(int id, Prompt prompt)
+        [HttpPatch("{id:int}")]
+        public async Task<ActionResult<Prompt>> UpdatePrompt(int id, [FromBody] UpdatePromptDto prompt)
         {
-            try
-            {
-                if (id != prompt.IdPrompts)
-                {
-                    return BadRequest("Dados inválidos");
-                }
+            var findPrompt = await _repository.GetPrompt(id);
 
-                var updatePrompt = await _repository.UpdatePrompt(prompt);
-                return Ok(updatePrompt);
-            }
-            catch (Exception ex)
+            if (findPrompt is null)
+                throw new ArgumentException("Prompt não encontrado.");
+
+
+            if (!string.IsNullOrWhiteSpace(prompt.Title))
             {
-                return StatusCode(500, $"Erro interno ao atualizar prompt: {ex.Message}");
+                findPrompt.Title = prompt.Title;
             }
+
+            if (!string.IsNullOrWhiteSpace(prompt.Conteudo))
+            {
+                findPrompt.Conteudo = prompt.Conteudo;
+            }
+
+            if (prompt.NichosIdNichos.HasValue)
+            {
+                findPrompt.NichosIdNichos = prompt.NichosIdNichos.Value;
+            }
+            
+
+            await _repository.UpdatePrompt(findPrompt);
+
+            return Ok("Atualizado com sucesso");
         }
 
         [HttpDelete("{id:int}")]

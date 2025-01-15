@@ -7,6 +7,10 @@
         public long? CpfCnpj { get; set; } 
         public long? Telephone { get; set; } 
         public string Adress { get; set; }
+        public string Sobrenome { get; set; }
+        public string Password { get; set; }
+        public string IdAutentication { get; set; }
+        public string Role { get; set; }    
     }
 }
 

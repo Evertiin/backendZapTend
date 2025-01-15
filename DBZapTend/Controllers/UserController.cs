@@ -3,6 +3,7 @@ using DBZapTend.Logs;
 using DBZapTend.Models;
 using DBZapTend.Repository;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -35,9 +36,9 @@ namespace DBZapTend.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<User>> CreateUsers(User user)
+        public async Task<ActionResult<User>> CreateUsers([FromBody] UpdateUserDto userDto)
         {
-            if (!ModelState.IsValid)
+            if (userDto == null)
             {
                 await Log.LogToFile("log_", $"COD:1002-4 ,Dados inválidos");
                 return BadRequest("COD:1002-4 ,Dados inválidos");
@@ -45,6 +46,17 @@ namespace DBZapTend.Controllers
 
             try
             {
+                var user = new User
+                {
+                    Name = userDto.Name,
+                    Email = userDto.Email,
+                    IdAutentication = userDto.IdAutentication,
+                    Adress = userDto.Adress,
+                    CpfCnpj = userDto.CpfCnpj ?? 0,
+                    Telephone = userDto.Telephone ?? 0,
+                    Role = userDto.Role
+                };
+
                 var createdUser = await _repository.CreateUser(user);
 
                 await Log.LogToFile("log_", $"COD:1002-2 ,Usuário criado com sucesso");
@@ -78,22 +90,42 @@ namespace DBZapTend.Controllers
         }
 
         [HttpPatch("{id:minlength(3):maxlength(100)}")]
-        public async Task<ActionResult<User>> UpdateUser(string id, UpdateUserDto user)
+        public async Task<ActionResult<User>> UpdateUser(string id, [FromBody] UpdateUserDto user)
         {
-            try
-            {
-                if (user == null)
-                {
-                    return BadRequest("Dados inválidos");
-                }
+            var findUser = await _repository.GetUser(id);
 
-                var updateUser = await _repository.UpdateUsers(id,user);
-                return Ok(updateUser);
-            }
-            catch (Exception ex)
+            if (findUser is null)
+                throw new ArgumentException("Usuário não encontrado.");
+
+
+            if (!string.IsNullOrWhiteSpace(user.Name))
             {
-                return StatusCode(500, $"Erro interno ao atualizar usuário: {ex.Message}");
+                findUser.Name = user.Name;
             }
+
+            if (!string.IsNullOrWhiteSpace(user.Email))
+            {
+                findUser.Email = user.Email;
+            }
+
+            if (user.CpfCnpj.HasValue)
+            {
+                findUser.CpfCnpj = user.CpfCnpj.Value;
+            }
+
+            if (user.Telephone.HasValue)
+            {
+                findUser.Telephone = user.Telephone.Value;
+            }
+
+            if (!string.IsNullOrWhiteSpace(user.Adress))
+            {
+                findUser.Adress = user.Adress;
+            }
+
+            await _repository.UpdateUsers(findUser);
+
+            return Ok("Atualizado com sucesso");
         }
 
         [HttpDelete("{id:minlength(3):maxlength(100)}")]

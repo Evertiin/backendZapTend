@@ -46,50 +46,15 @@ namespace DBZapTend.Repository
 
             return user;
         }
-        public async Task<User> UpdateUsers(string id,UpdateUserDto user)
+        public async Task<User> UpdateUsers(User user)
 
         {
-            var findUser = await _context.Users.FindAsync(id);
 
-            if (findUser is null)
-                throw new ArgumentNullException(nameof(findUser));
-
-            
-            if (user == null)
-            {
-                throw new ArgumentException("Usuário não encontrado.");
-            }
-
-
-            if (!string.IsNullOrWhiteSpace(user.Name))
-            {
-                findUser.Name = user.Name;
-            }
-
-            if (!string.IsNullOrWhiteSpace(user.Email))
-            {
-                findUser.Email = user.Email;
-            }
-
-            if (user.CpfCnpj.HasValue) 
-            {
-                findUser.CpfCnpj = user.CpfCnpj.Value;
-            }
-
-            if (user.Telephone.HasValue)
-            {
-                findUser.Telephone = user.Telephone.Value;
-            }
-
-            if (!string.IsNullOrWhiteSpace(user.Adress))
-            {
-                findUser.Adress = user.Adress;
-            }
-            
+            _context.Users.Update(user);
             await _context.SaveChangesAsync();
 
-            
-            return findUser;
+            return user;
+           
         }
         public async Task<User> DeleteUser(string id)
         {
@@ -105,10 +70,6 @@ namespace DBZapTend.Repository
 
             return user;
         }
-
-        public Task<User> UpdateUser(string id, User user)
-        {
-            throw new NotImplementedException();
-        }
+        
     }
 }

@@ -11,7 +11,7 @@ namespace DBZapTend.Repository
 
         Task<User> CreateUser(User user);
 
-        Task<User> UpdateUsers(string id,UpdateUserDto user);
+        Task<User> UpdateUsers(User user);
 
         Task<User> DeleteUser(string id);
     }
