@@ -1,8 +1,0 @@
-14/01/2025 10:48:32: Erro interno do servidor: 3D000: banco de dados "dbzaap" n�o existe
-14/01/2025 10:49:03: Erro interno do servidor: 3D000: banco de dados "dbzaap" n�o existe
-14/01/2025 10:49:04: Erro interno do servidor: 3D000: banco de dados "dbzaap" n�o existe
-14/01/2025 10:50:48: Erro interno do servidor: 3D000: banco de dados "dbzaap" n�o existe
-14/01/2025 10:51:31: Erro interno do servidor: Este host não é conhecido.
-14/01/2025 10:51:38: Erro interno do servidor: Este host não é conhecido.
-14/01/2025 11:00:29: COD:1002-5 ,Erro interno do servidor: Este host não é conhecido.
-14/01/2025 11:11:20: Todas as instancias coletadas
