@@ -2,6 +2,7 @@
 using DBZapTend.Logs;
 using DBZapTend.Models;
 using DBZapTend.Repository;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -10,6 +11,7 @@ using System.Threading.Tasks;
 
 namespace DBZapTend.Controllers
 {
+    //[Authorize(Roles = "User,Admin")]
     [ApiController]
     [Route("api/[controller]")]
     public class UserController : Controller
@@ -27,11 +29,13 @@ namespace DBZapTend.Controllers
             try
             {
                 var users = await _repository.GetUsers();
-                return Ok(users);
+                await Log.LogToFile("log_", "COD:1001-2 ,Usuários coletado com sucesso");
+                return Ok(new { Message = "COD:1001-2 ,Usuários coletado com sucesso", Users = users });
             }
             catch (Exception ex)
             {
-                return StatusCode(500, $"Erro interno ao buscar usuários: {ex.Message}");
+                await Log.LogToFile("log_", $"COD:1001-5,Erro interno ao buscar usuários: {ex.Message}");
+                return StatusCode(500, $"COD:1001-5,Erro interno ao buscar usuários: {ex.Message}");
             }
         }
 
@@ -40,8 +44,8 @@ namespace DBZapTend.Controllers
         {
             if (userDto == null)
             {
-                await Log.LogToFile("log_", $"COD:1002-4 ,Dados inválidos");
-                return BadRequest("COD:1002-4 ,Dados inválidos");
+                await Log.LogToFile("log_", $"COD:1001-4 ,Dados inválidos");
+                return BadRequest("COD:1001-4 ,Dados inválidos");
             }
 
             try
@@ -59,13 +63,13 @@ namespace DBZapTend.Controllers
 
                 var createdUser = await _repository.CreateUser(user);
 
-                await Log.LogToFile("log_", $"COD:1002-2 ,Usuário criado com sucesso");
-                return Ok(createdUser);
+                await Log.LogToFile("log_", $"COD:1001-2 ,Usuário criado com sucesso");
+                return Ok(new { Message = "COD:1001-2 ,Usuário criado com sucesso", Users = user });
             }
             catch (Exception ex)
             {
                 await Log.LogToFile("log_", $"COD:1001-5 ,Erro interno do servidor: {ex.Message}");
-                return StatusCode(500, $"Erro interno ao criar usuário: {ex.Message}");
+                return StatusCode(500, $"COD:1001-5,Erro interno ao criar usuário: {ex.Message}");
             }
         }
 
@@ -78,54 +82,72 @@ namespace DBZapTend.Controllers
 
                 if (user == null)
                 {
-                    return NotFound("Usuário não encontrado");
+                    await Log.LogToFile("log_", $"COD:1001-4 ,Usuário não encontrado");
+                    return NotFound("COD:1001-4, Usuário não encontrado");
                 }
-
-                return Ok(user);
+                await Log.LogToFile("log_", "COD:1001-2 ,Usuário coletado com sucesso");
+                return Ok(new { Message = "COD:1001-2 ,Usuário coletado com sucesso", Users = user });
+               
             }
             catch (Exception ex)
             {
-                return StatusCode(500, $"Erro interno ao buscar usuário por ID: {ex.Message}");
+                await Log.LogToFile("log_", $"COD:1001-5 ,Erro interno do servidor ao buscar usuário: {ex.Message}");
+                return StatusCode(500, $"COD:1001-5,Erro interno do servidor ao buscar usuário: {ex.Message}");
+                
             }
         }
 
         [HttpPatch("{id:minlength(3):maxlength(100)}")]
         public async Task<ActionResult<User>> UpdateUser(string id, [FromBody] UpdateUserDto user)
         {
-            var findUser = await _repository.GetUser(id);
-
-            if (findUser is null)
-                throw new ArgumentException("Usuário não encontrado.");
-
-
-            if (!string.IsNullOrWhiteSpace(user.Name))
+            try
             {
-                findUser.Name = user.Name;
-            }
+                var findUser = await _repository.GetUser(id);
 
-            if (!string.IsNullOrWhiteSpace(user.Email))
+                if (findUser is null)
+                {
+                    await Log.LogToFile("log_", $"COD:1001-5 ,Erro interno do servidor ao buscar usuário");
+                    return NotFound( "COD:1001-5,Erro interno do servidor ao buscar usuário");
+
+                }
+                await Log.LogToFile("log_", "COD:1001-2 ,Usuário coletado com sucesso");
+                if (!string.IsNullOrWhiteSpace(user.Name))
+                {
+                    findUser.Name = user.Name;
+                }
+
+                if (!string.IsNullOrWhiteSpace(user.Email))
+                {
+                    findUser.Email = user.Email;
+                }
+                if (!string.IsNullOrWhiteSpace(user.Role))
+                {
+                    findUser.Role = user.Role;
+                }
+
+                if (user.CpfCnpj.HasValue)
+                {
+                    findUser.CpfCnpj = user.CpfCnpj.Value;
+                }
+
+                if (user.Telephone.HasValue)
+                {
+                    findUser.Telephone = user.Telephone.Value;
+                }
+
+                if (!string.IsNullOrWhiteSpace(user.Adress))
+                {
+                    findUser.Adress = user.Adress;
+                }
+
+                await _repository.UpdateUsers(findUser);
+
+                return Ok("Atualizado com sucesso");
+            }
+            catch (Exception ex)
             {
-                findUser.Email = user.Email;
+                return StatusCode(500, $"Erro interno ao Atualizar Usuário: {ex.Message}");
             }
-
-            if (user.CpfCnpj.HasValue)
-            {
-                findUser.CpfCnpj = user.CpfCnpj.Value;
-            }
-
-            if (user.Telephone.HasValue)
-            {
-                findUser.Telephone = user.Telephone.Value;
-            }
-
-            if (!string.IsNullOrWhiteSpace(user.Adress))
-            {
-                findUser.Adress = user.Adress;
-            }
-
-            await _repository.UpdateUsers(findUser);
-
-            return Ok("Atualizado com sucesso");
         }
 
         [HttpDelete("{id:minlength(3):maxlength(100)}")]

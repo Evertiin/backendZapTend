@@ -1,6 +1,6 @@
 ﻿namespace DBZapTend.DTO
 {
-    public class UpdatePromptDto
+    public record UpdatePromptDto
     {
         public string Title { get; set; }
 

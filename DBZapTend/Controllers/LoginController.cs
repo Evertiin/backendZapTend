@@ -47,7 +47,7 @@ namespace DBZapTend.Controllers
                     return NotFound("Usuário não cadastrado ou credenciais incorretas.");
                 }
                 string token;
-                if (request.Role == "Admin")
+                if (userFromDb.Role == "Admin")
                 {
                     token = GenerateTokenAdminJWT(); 
                 }
@@ -56,7 +56,7 @@ namespace DBZapTend.Controllers
                     token = GenerateTokenUserJWT(); 
                 }
 
-                // Retorna o token e as informações do usuário
+                
                 return Ok(new { token, user = userFromDb });
             }
             catch (Exception ex)
@@ -83,7 +83,7 @@ namespace DBZapTend.Controllers
                     issuer: "StarAnyTech",
                     audience: "ZapTend",
                     claims: adminClaims,
-                    expires: DateTime.Now.AddMinutes(30),
+                    expires: DateTime.Now.AddHours(1),
                     signingCredentials: creds);
 
                 return new JwtSecurityTokenHandler().WriteToken(tokenAdmin);
@@ -111,7 +111,7 @@ namespace DBZapTend.Controllers
                     issuer: "StarAnyTech",
                     audience: "ZapTend",
                     claims: userClaims,
-                    expires: DateTime.Now.AddMinutes(30),
+                    expires: DateTime.Now.AddHours(1),
                     signingCredentials: creds);
 
                 return new JwtSecurityTokenHandler().WriteToken(tokenUser);

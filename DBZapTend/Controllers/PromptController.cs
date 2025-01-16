@@ -1,6 +1,7 @@
 ﻿using DBZapTend.DTO;
 using DBZapTend.Models;
 using DBZapTend.Repository;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -8,6 +9,7 @@ using System.Threading.Tasks;
 
 namespace DBZapTend.Controllers
 {
+    [Authorize(Roles = "User,Admin")]
     [ApiController]
     [Route("api/[controller]")]
     public class PromptController : Controller
@@ -75,31 +77,38 @@ namespace DBZapTend.Controllers
         [HttpPatch("{id:int}")]
         public async Task<ActionResult<Prompt>> UpdatePrompt(int id, [FromBody] UpdatePromptDto prompt)
         {
-            var findPrompt = await _repository.GetPrompt(id);
+            try {
+                var findPrompt = await _repository.GetPrompt(id);
 
-            if (findPrompt is null)
-                throw new ArgumentException("Prompt não encontrado.");
+                if (findPrompt is null)
+                    throw new ArgumentException("Prompt não encontrado.");
 
 
-            if (!string.IsNullOrWhiteSpace(prompt.Title))
-            {
-                findPrompt.Title = prompt.Title;
+                if (!string.IsNullOrWhiteSpace(prompt.Title))
+                {
+                    findPrompt.Title = prompt.Title;
+                }
+
+                if (!string.IsNullOrWhiteSpace(prompt.Conteudo))
+                {
+                    findPrompt.Conteudo = prompt.Conteudo;
+                }
+
+                if (prompt.NichosIdNichos.HasValue)
+                {
+                    findPrompt.NichosIdNichos = prompt.NichosIdNichos.Value;
+                }
+
+
+                await _repository.UpdatePrompt(findPrompt);
+
+                return Ok("Atualizado com sucesso");
             }
-
-            if (!string.IsNullOrWhiteSpace(prompt.Conteudo))
+            catch(Exception ex) 
             {
-                findPrompt.Conteudo = prompt.Conteudo;
+                return StatusCode(500, $"Erro interno ao Atualizar prompt: {ex.Message}");
+
             }
-
-            if (prompt.NichosIdNichos.HasValue)
-            {
-                findPrompt.NichosIdNichos = prompt.NichosIdNichos.Value;
-            }
-            
-
-            await _repository.UpdatePrompt(findPrompt);
-
-            return Ok("Atualizado com sucesso");
         }
 
         [HttpDelete("{id:int}")]

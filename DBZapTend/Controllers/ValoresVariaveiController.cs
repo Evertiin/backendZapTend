@@ -1,5 +1,7 @@
-﻿using DBZapTend.Models;
+﻿using DBZapTend.DTO;
+using DBZapTend.Models;
 using DBZapTend.Repository;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -7,6 +9,7 @@ using System.Threading.Tasks;
 
 namespace DBZapTend.Controllers
 {
+    [Authorize(Roles = "User,Admin")]
     [ApiController]
     [Route("api/[controller]")]
     public class ValoresVariaveiController : Controller
@@ -71,18 +74,31 @@ namespace DBZapTend.Controllers
             }
         }
 
-        [HttpPut("{id:int}")]
-        public async Task<ActionResult<ValoresVariavei>> UpdateValoresVariaveis(int id, ValoresVariavei valores)
+        [HttpPatch("{id:int}")]
+        public async Task<ActionResult<ValoresVariavei>> UpdateValoresVariaveis(int id, UpdateValoresVariaveiDto valores)
         {
             try
             {
-                if (id != valores.IdValoresVariaveis)
+                var findVariavel = await _repository.GetValoresVariavei(id);
+                if (findVariavel is null)
+                    throw new ArgumentException("Variavel não encontrado.");
+
+                if (!string.IsNullOrWhiteSpace(valores.Value))
                 {
-                    return BadRequest("Dados inválidos");
+                    findVariavel.Value = valores.Value;
+                }
+                if (valores.VariaveisIdVariaveis.HasValue)
+                {
+                    findVariavel.VariaveisIdVariaveis = valores.VariaveisIdVariaveis.Value;
+                }
+                if (valores.PromptsIdPrompts.HasValue)
+                {
+                    findVariavel.PromptsIdPrompts = valores.PromptsIdPrompts.Value;
                 }
 
-                var updateValores = await _repository.UpdateValoresVariaveis(valores);
-                return Ok(updateValores);
+                await _repository.UpdateValoresVariaveis(findVariavel);
+
+                return Ok("Atualizado com sucesso");
             }
             catch (Exception ex)
             {

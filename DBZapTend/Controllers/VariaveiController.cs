@@ -1,5 +1,7 @@
-﻿using DBZapTend.Models;
+﻿using DBZapTend.DTO;
+using DBZapTend.Models;
 using DBZapTend.Repository;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -7,6 +9,7 @@ using System.Threading.Tasks;
 
 namespace DBZapTend.Controllers
 {
+    [Authorize(Roles = "User,Admin")]
     [ApiController]
     [Route("api/[controller]")]
     public class VariaveiController : Controller
@@ -71,22 +74,34 @@ namespace DBZapTend.Controllers
             }
         }
 
-        [HttpPut("{id:int}")]
-        public async Task<ActionResult<Variavei>> UpdateVariavel(int id, Variavei variavei)
+        [HttpPatch("{id:int}")]
+        public async Task<ActionResult<Variavei>> UpdateVariavel(int id, [FromBody] UpdateVariaveiDto variavei)
         {
             try
             {
-                if (id != variavei.IdVariaveis)
+                var findVariavel = await _repository.GetVariavei(id);
+
+                if (findVariavel is null)
+                    throw new ArgumentException("Prompt não encontrado.");
+
+
+                if (!string.IsNullOrWhiteSpace(variavei.Name))
                 {
-                    return BadRequest("Dados inválidos");
+                    findVariavel.Name = variavei.Name;
                 }
 
-                var updateVariavel = await _repository.UpdateVariavei(variavei);
-                return Ok(updateVariavel);
+                if (!string.IsNullOrWhiteSpace(variavei.Description))
+                {
+                    findVariavel.Description = variavei.Description;
+                }
+
+                await _repository.UpdateVariavei(findVariavel);
+
+                return Ok("Atualizado com sucesso");
             }
-            catch (Exception ex)
+            catch (Exception ex) 
             {
-                return StatusCode(500, $"Erro interno ao atualizar variável: {ex.Message}");
+                return StatusCode(500, $"Erro interno ao Atualizar variável: {ex.Message}");
             }
         }
 

@@ -1,6 +1,7 @@
 ﻿using DBZapTend.Logs;
 using DBZapTend.Models;
 using DBZapTend.Repository;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
@@ -9,6 +10,7 @@ using System.Threading.Tasks;
 
 namespace DBZapTend.Controllers
 {
+    [Authorize(Roles = "User,Admin")]
     [ApiController]
     [Route("api/[controller]")]
     public class InstanceController : Controller

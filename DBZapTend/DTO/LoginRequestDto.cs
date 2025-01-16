@@ -1,6 +1,6 @@
 ﻿namespace DBZapTend.DTO
 {
-    public class LoginRequestDto
+    public record LoginRequestDto
     {
         public string Email { get; set; }
         public string IdAuthentication { get; set; }

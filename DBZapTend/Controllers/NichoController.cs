@@ -1,5 +1,6 @@
 ﻿using DBZapTend.Models;
 using DBZapTend.Repository;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -7,6 +8,7 @@ using System.Threading.Tasks;
 
 namespace DBZapTend.Controllers
 {
+    [Authorize(Roles = "User,Admin")]
     [ApiController]
     [Route("api/[controller]")]
     public class NichoController : Controller

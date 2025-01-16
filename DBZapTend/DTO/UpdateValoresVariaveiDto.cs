@@ -1,11 +1,7 @@
 ﻿namespace DBZapTend.DTO
 {
-    public class ValoresVariaveisDto
+    public record UpdateValoresVariaveiDto
     {
-        public int IdValoresVariaveis { get; set; }
-
-        public string UserId { get; set; }
-
         public int? PromptsIdPrompts { get; set; }
 
         public string Value { get; set; }
