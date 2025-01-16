@@ -141,12 +141,13 @@ namespace DBZapTend.Controllers
                 }
 
                 await _repository.UpdateUsers(findUser);
-
-                return Ok("Atualizado com sucesso");
+                await Log.LogToFile("log_", $"COD:1001-2 ,Atualizado com sucesso");
+                return Ok("COD:1001-2,Atualizado com sucesso");
             }
             catch (Exception ex)
             {
-                return StatusCode(500, $"Erro interno ao Atualizar Usuário: {ex.Message}");
+                await Log.LogToFile("log_", $"COD:1001-5 ,Erro interno do servidor ao atualizar usuário");
+                return StatusCode(500, $"COD:1001-5, Erro interno ao Atualizar Usuário: {ex.Message}");
             }
         }
 

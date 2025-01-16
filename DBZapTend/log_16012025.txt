@@ -1,9 +1,2 @@
-16/01/2025 13:00:50: 
-16/01/2025 13:00:55: 
-16/01/2025 13:03:32: 
-16/01/2025 13:06:39: 
-16/01/2025 13:07:09: 
-16/01/2025 15:01:02: COD:1002-2 ,Usuário coletado com sucesso
-16/01/2025 15:02:41: COD:1002-2 ,Usuário coletado com sucesso
-16/01/2025 15:05:06: COD:1002-2 ,Usuário coletado com sucesso
-16/01/2025 15:06:37: COD:1002-2 ,Usuário coletado com sucesso
+16/01/2025 17:53:09: COD:1001-2 ,Usuários coletado com sucesso
+16/01/2025 17:55:04: COD:1001-2 ,Usuários coletado com sucesso
