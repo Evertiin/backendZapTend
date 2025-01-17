@@ -30,9 +30,9 @@ namespace DBZapTend.Controllers
                 await Log.LogToFile("log_", "COD:1004-2 ,Nichos coletados com sucesso");
                 return Ok(new { Message = "COD:1004-2 ,Nichos coletados com sucesso", Nichos = nichos });
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                await Log.LogToFile("log_", $"COD:1004-5 ,Erro interno ao buscar nichos");
+                await Log.LogToFile("log_", $"COD:1004-5 ,Erro interno ao buscar nichos: {ex.Message}");
                 return StatusCode(500, $"COD:1004-5 ,Erro interno do servidor");
             }
         }
@@ -52,9 +52,9 @@ namespace DBZapTend.Controllers
                 await Log.LogToFile("log_", $"COD:1004-2 ,Nicho criado com sucesso");
                 return Ok(new { Message = "COD:1004-2 ,Nicho criado com sucesso", Nicho = createdNicho });
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                await Log.LogToFile("log_", $"COD:1004-5 ,Erro interno ao criar nicho");
+                await Log.LogToFile("log_", $"COD:1004-5 ,Erro interno ao criar nicho: {ex.Message}");
                 return StatusCode(500, $"COD:1004-5 ,Erro interno do servidor");
             }
         }
@@ -75,9 +75,9 @@ namespace DBZapTend.Controllers
                 await Log.LogToFile("log_", $"COD:1004-2 ,Nicho coletado com sucesso: {id}");
                 return Ok(new { Message = "COD:1004-2 ,Nicho coletado com sucesso", Nicho = nicho });
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                await Log.LogToFile("log_", $"COD:1004-5 ,Erro interno ao buscar nicho por ID");
+                await Log.LogToFile("log_", $"COD:1004-5 ,Erro interno ao buscar nicho por ID: {ex.Message}");
                 return StatusCode(500, $"COD:1004-5 ,Erro interno do servidor");
             }
         }
@@ -97,9 +97,9 @@ namespace DBZapTend.Controllers
                 await Log.LogToFile("log_", $"COD:1004-2 ,Nicho atualizado com sucesso: {id}");
                 return Ok(new { Message = "COD:1004-2 ,Nicho atualizado com sucesso", Nicho = updatedNicho });
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                await Log.LogToFile("log_", $"COD:1004-5 ,Erro interno ao atualizar nicho");
+                await Log.LogToFile("log_", $"COD:1004-5 ,Erro interno ao atualizar nicho: {ex.Message}");
                 return StatusCode(500, $"COD:1004-5 ,Erro interno do servidor");
             }
         }
@@ -121,9 +121,9 @@ namespace DBZapTend.Controllers
                 await Log.LogToFile("log_", $"COD:1004-2 ,Nicho deletado com sucesso: {id}");
                 return Ok(new { Message = "COD:1004-2 ,Nicho deletado com sucesso", Nicho = deleteNicho });
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                await Log.LogToFile("log_", $"COD:1004-5 ,Erro interno ao deletar nicho");
+                await Log.LogToFile("log_", $"COD:1004-5 ,Erro interno ao deletar nicho: { ex.Message}");
                 return StatusCode(500, $"COD:1004-5 ,Erro interno do servidor");
             }
         }
