@@ -23,6 +23,7 @@ namespace DBZapTend.Controllers
             _repository = repository;
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpGet]
         public async Task<ActionResult<IEnumerable<User>>> Get()
         {
@@ -32,13 +33,13 @@ namespace DBZapTend.Controllers
                 await Log.LogToFile("log_", "COD:1001-2 ,Usuários coletado com sucesso");
                 return Ok(new { Message = "COD:1001-2 ,Usuários coletado com sucesso", Users = users });
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                await Log.LogToFile("log_", $"COD:1001-5,Erro interno ao buscar usuários: {ex.Message}");
-                return StatusCode(500, $"COD:1001-5,Erro interno ao buscar usuários: {ex.Message}");
+                await Log.LogToFile("log_", $"COD:1001-5,Erro interno ao buscar usuários");
+                return StatusCode(500, $"COD:1001-5,Erro interno ao buscar usuários");
             }
         }
-
+        [Authorize(Roles = "User,Admin")]
         [HttpPost]
         public async Task<ActionResult<User>> CreateUsers([FromBody] UpdateUserDto userDto)
         {
@@ -66,10 +67,10 @@ namespace DBZapTend.Controllers
                 await Log.LogToFile("log_", $"COD:1001-2 ,Usuário criado com sucesso");
                 return Ok(new { Message = "COD:1001-2 ,Usuário criado com sucesso", Users = user });
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                await Log.LogToFile("log_", $"COD:1001-5 ,Erro interno do servidor: {ex.Message}");
-                return StatusCode(500, $"COD:1001-5,Erro interno ao criar usuário: {ex.Message}");
+                await Log.LogToFile("log_", $"COD:1001-5 ,Erro interno do servidor");
+                return StatusCode(500, "COD:1001-5,Erro interno ao criar usuário");
             }
         }
 
@@ -89,14 +90,14 @@ namespace DBZapTend.Controllers
                 return Ok(new { Message = "COD:1001-2 ,Usuário coletado com sucesso", Users = user });
                
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                await Log.LogToFile("log_", $"COD:1001-5 ,Erro interno do servidor ao buscar usuário: {ex.Message}");
-                return StatusCode(500, $"COD:1001-5,Erro interno do servidor ao buscar usuário: {ex.Message}");
+                await Log.LogToFile("log_", $"COD:1001-5 ,Erro interno do servidor ao buscar usuário");
+                return StatusCode(500, "COD:1001-5,Erro interno do servidor ao buscar usuário");
                 
             }
         }
-
+        [Authorize(Roles = "Admin,User")]
         [HttpPatch("{id:minlength(3):maxlength(100)}")]
         public async Task<ActionResult<User>> UpdateUser(string id, [FromBody] UpdateUserDto user)
         {
@@ -106,8 +107,8 @@ namespace DBZapTend.Controllers
 
                 if (findUser is null)
                 {
-                    await Log.LogToFile("log_", $"COD:1001-5 ,Erro interno do servidor ao buscar usuário");
-                    return NotFound( "COD:1001-5,Erro interno do servidor ao buscar usuário");
+                    await Log.LogToFile("log_", $"COD:1001-4 Usuário não encontrado");
+                    return NotFound("COD:1001-4,Usuário não encontrado");
 
                 }
                 await Log.LogToFile("log_", "COD:1001-2 ,Usuário coletado com sucesso");
@@ -144,13 +145,13 @@ namespace DBZapTend.Controllers
                 await Log.LogToFile("log_", $"COD:1001-2 ,Atualizado com sucesso");
                 return Ok("COD:1001-2,Atualizado com sucesso");
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 await Log.LogToFile("log_", $"COD:1001-5 ,Erro interno do servidor ao atualizar usuário");
-                return StatusCode(500, $"COD:1001-5, Erro interno ao Atualizar Usuário: {ex.Message}");
+                return StatusCode(500, "COD:1001-5, Erro interno ao Atualizar Usuário");
             }
         }
-
+        [Authorize(Roles = "Admin,User")]
         [HttpDelete("{id:minlength(3):maxlength(100)}")]
         public async Task<ActionResult<User>> DeleteUser(string id)
         {
@@ -160,14 +161,16 @@ namespace DBZapTend.Controllers
 
                 if (deleteUser == null)
                 {
-                    return NotFound("Usuário não encontrado");
+                    await Log.LogToFile("log_", $"COD:1001-4 ,Usuário não encontrado");
+                    return NotFound("COD:1001-4,Usuário não encontrado");
                 }
-
-                return Ok(deleteUser);
+                await Log.LogToFile("log_", $"COD:1001-2 ,Usuário deletado com sucesso");
+                return Ok("COD:1001-2 ,Usuário deletado com sucesso");
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return StatusCode(500, $"Erro interno ao deletar usuário: {ex.Message}");
+                await Log.LogToFile("log_", $"COD:1001-5 ,Erro interno do servidor ao atualizar usuário");
+                return StatusCode(500, "COD:1001-5, Erro interno ao Atualizar Usuário:");
             }
         }
     }

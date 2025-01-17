@@ -1,4 +1,5 @@
-﻿using DBZapTend.Models;
+﻿using DBZapTend.Logs;
+using DBZapTend.Models;
 using DBZapTend.Repository;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -25,12 +26,14 @@ namespace DBZapTend.Controllers
         {
             try
             {
-                var nicho = await _repository.GetNichos();
-                return Ok(nicho);
+                var nichos = await _repository.GetNichos();
+                await Log.LogToFile("log_", "COD:1004-2 ,Nichos coletados com sucesso");
+                return Ok(new { Message = "COD:1004-2 ,Nichos coletados com sucesso", Nichos = nichos });
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return StatusCode(500, $"Erro interno ao buscar nichos: {ex.Message}");
+                await Log.LogToFile("log_", $"COD:1004-5 ,Erro interno ao buscar nichos");
+                return StatusCode(500, $"COD:1004-5 ,Erro interno do servidor");
             }
         }
 
@@ -41,15 +44,18 @@ namespace DBZapTend.Controllers
             {
                 if (nicho is null)
                 {
-                    return BadRequest("Dados inválidos");
+                    await Log.LogToFile("log_", "COD:1004-4 ,Dados inválidos ao criar nicho");
+                    return BadRequest("COD:1004-4 ,Dados inválidos");
                 }
 
                 var createdNicho = await _repository.CreateNicho(nicho);
-                return Ok(createdNicho);
+                await Log.LogToFile("log_", $"COD:1004-2 ,Nicho criado com sucesso");
+                return Ok(new { Message = "COD:1004-2 ,Nicho criado com sucesso", Nicho = createdNicho });
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return StatusCode(500, $"Erro interno ao criar nicho: {ex.Message}");
+                await Log.LogToFile("log_", $"COD:1004-5 ,Erro interno ao criar nicho");
+                return StatusCode(500, $"COD:1004-5 ,Erro interno do servidor");
             }
         }
 
@@ -62,14 +68,17 @@ namespace DBZapTend.Controllers
 
                 if (nicho == null)
                 {
-                    return NotFound("Nicho não encontrado");
+                    await Log.LogToFile("log_", $"COD:1004-4 ,Nicho não encontrado: {id}");
+                    return NotFound("COD:1004-4 ,Nicho não encontrado");
                 }
 
-                return Ok(nicho);
+                await Log.LogToFile("log_", $"COD:1004-2 ,Nicho coletado com sucesso: {id}");
+                return Ok(new { Message = "COD:1004-2 ,Nicho coletado com sucesso", Nicho = nicho });
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return StatusCode(500, $"Erro interno ao buscar nicho por ID: {ex.Message}");
+                await Log.LogToFile("log_", $"COD:1004-5 ,Erro interno ao buscar nicho por ID");
+                return StatusCode(500, $"COD:1004-5 ,Erro interno do servidor");
             }
         }
 
@@ -80,15 +89,18 @@ namespace DBZapTend.Controllers
             {
                 if (id != nicho.IdNichos)
                 {
-                    return BadRequest("Dados inválidos");
+                    await Log.LogToFile("log_", "COD:1004-4 ,Dados inválidos ao atualizar nicho");
+                    return BadRequest("COD:1004-4 ,Dados inválidos");
                 }
 
-                var updateNicho = await _repository.UpdateNicho(nicho);
-                return Ok(updateNicho);
+                var updatedNicho = await _repository.UpdateNicho(nicho);
+                await Log.LogToFile("log_", $"COD:1004-2 ,Nicho atualizado com sucesso: {id}");
+                return Ok(new { Message = "COD:1004-2 ,Nicho atualizado com sucesso", Nicho = updatedNicho });
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return StatusCode(500, $"Erro interno ao atualizar nicho: {ex.Message}");
+                await Log.LogToFile("log_", $"COD:1004-5 ,Erro interno ao atualizar nicho");
+                return StatusCode(500, $"COD:1004-5 ,Erro interno do servidor");
             }
         }
 
@@ -101,15 +113,18 @@ namespace DBZapTend.Controllers
 
                 if (nicho == null)
                 {
-                    return NotFound("Nicho não encontrado");
+                    await Log.LogToFile("log_", $"COD:1004-4 ,Nicho não encontrado: {id}");
+                    return NotFound("COD:1004-4 ,Nicho não encontrado");
                 }
 
                 var deleteNicho = await _repository.DeleteNicho(id);
-                return Ok(deleteNicho);
+                await Log.LogToFile("log_", $"COD:1004-2 ,Nicho deletado com sucesso: {id}");
+                return Ok(new { Message = "COD:1004-2 ,Nicho deletado com sucesso", Nicho = deleteNicho });
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return StatusCode(500, $"Erro interno ao deletar nicho: {ex.Message}");
+                await Log.LogToFile("log_", $"COD:1004-5 ,Erro interno ao deletar nicho");
+                return StatusCode(500, $"COD:1004-5 ,Erro interno do servidor");
             }
         }
     }

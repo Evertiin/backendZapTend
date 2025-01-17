@@ -1,4 +1,5 @@
 ﻿using DBZapTend.DTO;
+using DBZapTend.Logs;
 using DBZapTend.Models;
 using DBZapTend.Repository;
 using Microsoft.AspNetCore.Authorization;
@@ -27,11 +28,13 @@ namespace DBZapTend.Controllers
             try
             {
                 var valores = await _repository.GetValoresVariaveis();
-                return Ok(valores);
+                await Log.LogToFile("log_", "COD:1009-2 ,Valores variáveis coletados com sucesso");
+                return Ok(new { Message = "COD:1009-2 ,Valores variáveis coletados com sucesso", Valores = valores });
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return StatusCode(500, $"Erro interno ao buscar valores variáveis: {ex.Message}");
+                await Log.LogToFile("log_", $"COD:1009-5 ,Erro interno ao buscar valores variáveis");
+                return StatusCode(500, $"COD:1009-5 ,Erro interno do servidor");
             }
         }
 
@@ -42,15 +45,18 @@ namespace DBZapTend.Controllers
             {
                 if (valores is null)
                 {
-                    return BadRequest("Dados inválidos");
+                    await Log.LogToFile("log_", "COD:1009-4 ,Dados inválidos ao criar valores variáveis");
+                    return BadRequest("COD:1009-4 ,Dados inválidos");
                 }
 
                 var createdValores = await _repository.CreateValoresVariaveis(valores);
-                return Ok(createdValores);
+                await Log.LogToFile("log_", $"COD:1009-2 ,Valores variáveis criados com sucesso");
+                return Ok(new { Message = "COD:1009-2 ,Valores variáveis criados com sucesso", Valores = createdValores });
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return StatusCode(500, $"Erro interno ao criar valores variáveis: {ex.Message}");
+                await Log.LogToFile("log_", $"COD:1009-5 ,Erro interno ao criar valores variáveis");
+                return StatusCode(500, $"COD:1009-5 ,Erro interno do servidor");
             }
         }
 
@@ -63,14 +69,17 @@ namespace DBZapTend.Controllers
 
                 if (valores == null)
                 {
-                    return NotFound("Variável não encontrada");
+                    await Log.LogToFile("log_", $"COD:1009-4 ,Valor variável não encontrado: {id}");
+                    return NotFound("COD:1009-4 ,Valor variável não encontrado");
                 }
 
-                return Ok(valores);
+                await Log.LogToFile("log_", $"COD:1009-2 ,Valor variável coletado com sucesso: {id}");
+                return Ok(new { Message = "COD:1009-2 ,Valor variável coletado com sucesso", Valores = valores });
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return StatusCode(500, $"Erro interno ao buscar valor variável por ID: {ex.Message}");
+                await Log.LogToFile("log_", $"COD:1009-5 ,Erro interno ao buscar valor variável por ID");
+                return StatusCode(500, $"COD:1009-5 ,Erro interno do servidor");
             }
         }
 
@@ -80,29 +89,36 @@ namespace DBZapTend.Controllers
             try
             {
                 var findVariavel = await _repository.GetValoresVariavei(id);
+
                 if (findVariavel is null)
-                    throw new ArgumentException("Variavel não encontrado.");
+                {
+                    await Log.LogToFile("log_", $"COD:1009-4 ,Valor variável não encontrado: {id}");
+                    return NotFound("COD:1009-4 ,Valor variável não encontrado");
+                }
 
                 if (!string.IsNullOrWhiteSpace(valores.Value))
                 {
                     findVariavel.Value = valores.Value;
                 }
+
                 if (valores.VariaveisIdVariaveis.HasValue)
                 {
                     findVariavel.VariaveisIdVariaveis = valores.VariaveisIdVariaveis.Value;
                 }
+
                 if (valores.PromptsIdPrompts.HasValue)
                 {
                     findVariavel.PromptsIdPrompts = valores.PromptsIdPrompts.Value;
                 }
 
                 await _repository.UpdateValoresVariaveis(findVariavel);
-
-                return Ok("Atualizado com sucesso");
+                await Log.LogToFile("log_", $"COD:1009-2 ,Valor variável atualizado com sucesso: {id}");
+                return Ok(new { Message = "COD:1009-2 ,Valor variável atualizado com sucesso", Valores = findVariavel });
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return StatusCode(500, $"Erro interno ao atualizar valores variáveis: {ex.Message}");
+                await Log.LogToFile("log_", $"COD:1009-5 ,Erro interno ao atualizar valores variáveis");
+                return StatusCode(500, $"COD:1009-5 ,Erro interno do servidor");
             }
         }
 
@@ -115,15 +131,18 @@ namespace DBZapTend.Controllers
 
                 if (valores == null)
                 {
-                    return NotFound("Variável não encontrada");
+                    await Log.LogToFile("log_", $"COD:1009-4 ,Valor variável não encontrado: {id}");
+                    return NotFound("COD:1009-4 ,Valor variável não encontrado");
                 }
 
                 var deleteValores = await _repository.DeleteValoresVariaveis(id);
-                return Ok(deleteValores);
+                await Log.LogToFile("log_", $"COD:1009-2 ,Valor variável deletado com sucesso: {id}");
+                return Ok(new { Message = "COD:1009-2 ,Valor variável deletado com sucesso", Valores = deleteValores });
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return StatusCode(500, $"Erro interno ao deletar valores variáveis: {ex.Message}");
+                await Log.LogToFile("log_", $"COD:1009-5 ,Erro interno ao deletar valores variáveis");
+                return StatusCode(500, $"COD:1009-5 ,Erro interno do servidor");
             }
         }
     }

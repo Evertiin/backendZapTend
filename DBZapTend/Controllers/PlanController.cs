@@ -1,4 +1,5 @@
-﻿using DBZapTend.Models;
+﻿using DBZapTend.Logs;
+using DBZapTend.Models;
 using DBZapTend.Repository;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -25,12 +26,14 @@ namespace DBZapTend.Controllers
         {
             try
             {
-                var plan = await _repository.GetPlans();
-                return Ok(plan);
+                var plans = await _repository.GetPlans();
+                await Log.LogToFile("log_", "COD:1006-2 ,Planos coletados com sucesso");
+                return Ok(new { Message = "COD:1006-2 ,Planos coletados com sucesso", Plans = plans });
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return StatusCode(500, $"Erro interno ao buscar planos: {ex.Message}");
+                await Log.LogToFile("log_", $"COD:1006-5 ,Erro interno ao buscar planos");
+                return StatusCode(500, $"COD:1006-5 ,Erro interno do servidor");
             }
         }
 
@@ -41,15 +44,18 @@ namespace DBZapTend.Controllers
             {
                 if (plan is null)
                 {
-                    return BadRequest("Dados inválidos");
+                    await Log.LogToFile("log_", "COD:1006-4 ,Dados inválidos ao criar plano");
+                    return BadRequest("COD:1006-4 ,Dados inválidos");
                 }
 
                 var createdPlan = await _repository.CreatePlan(plan);
-                return Ok(createdPlan);
+                await Log.LogToFile("log_", $"COD:1006-2 ,Plano criado com sucesso");
+                return Ok(new { Message = "COD:1006-2 ,Plano criado com sucesso", Plan = createdPlan });
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return StatusCode(500, $"Erro interno ao criar plano: {ex.Message}");
+                await Log.LogToFile("log_", $"COD:1006-5 ,Erro interno ao criar plano");
+                return StatusCode(500, $"COD:1006-5 ,Erro interno do servidor");
             }
         }
 
@@ -62,14 +68,17 @@ namespace DBZapTend.Controllers
 
                 if (plan == null)
                 {
-                    return NotFound("Plano não encontrado");
+                    await Log.LogToFile("log_", $"COD:1006-4 ,Plano não encontrado: {id}");
+                    return NotFound("COD:1006-4 ,Plano não encontrado");
                 }
 
-                return Ok(plan);
+                await Log.LogToFile("log_", $"COD:1006-2 ,Plano coletado com sucesso: {id}");
+                return Ok(new { Message = "COD:1006-2 ,Plano coletado com sucesso", Plan = plan });
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return StatusCode(500, $"Erro interno ao buscar plano por ID: {ex.Message}");
+                await Log.LogToFile("log_", $"COD:1006-5 ,Erro interno ao buscar plano por ID");
+                return StatusCode(500, $"COD:1006-5 ,Erro interno do servidor");
             }
         }
 
@@ -80,15 +89,18 @@ namespace DBZapTend.Controllers
             {
                 if (id != plan.Id)
                 {
-                    return BadRequest("Dados inválidos");
+                    await Log.LogToFile("log_", "COD:1006-4 ,Dados inválidos ao atualizar plano");
+                    return BadRequest("COD:1006-4 ,Dados inválidos");
                 }
 
-                var updatePlan = await _repository.UpdatePlan(plan);
-                return Ok(updatePlan);
+                var updatedPlan = await _repository.UpdatePlan(plan);
+                await Log.LogToFile("log_", $"COD:1006-2 ,Plano atualizado com sucesso: {id}");
+                return Ok(new { Message = "COD:1006-2 ,Plano atualizado com sucesso", Plan = updatedPlan });
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return StatusCode(500, $"Erro interno ao atualizar plano: {ex.Message}");
+                await Log.LogToFile("log_", $"COD:1006-5 ,Erro interno ao atualizar plano");
+                return StatusCode(500, $"COD:1006-5 ,Erro interno do servidor");
             }
         }
 
@@ -101,15 +113,18 @@ namespace DBZapTend.Controllers
 
                 if (plan == null)
                 {
-                    return NotFound("Plano não encontrado");
+                    await Log.LogToFile("log_", $"COD:1006-4 ,Plano não encontrado: {id}");
+                    return NotFound("COD:1006-4 ,Plano não encontrado");
                 }
 
                 var deletePlan = await _repository.DeletePlan(id);
-                return Ok(deletePlan);
+                await Log.LogToFile("log_", $"COD:1006-2 ,Plano deletado com sucesso: {id}");
+                return Ok(new { Message = "COD:1006-2 ,Plano deletado com sucesso", Plan = deletePlan });
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return StatusCode(500, $"Erro interno ao deletar plano: {ex.Message}");
+                await Log.LogToFile("log_", $"COD:1006-5 ,Erro interno ao deletar plano");
+                return StatusCode(500, $"COD:1006-5 ,Erro interno do servidor");
             }
         }
     }

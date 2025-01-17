@@ -1,4 +1,5 @@
-﻿using DBZapTend.Models;
+﻿using DBZapTend.Logs;
+using DBZapTend.Models;
 using DBZapTend.Repository;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -25,12 +26,14 @@ namespace DBZapTend.Controllers
         {
             try
             {
-                var payment = await _repository.GetPayments();
-                return Ok(payment);
+                var payments = await _repository.GetPayments();
+                await Log.LogToFile("log_", "COD:1005-2 ,Pagamentos coletados com sucesso");
+                return Ok(new { Message = "COD:1005-2 ,Pagamentos coletados com sucesso", Payments = payments });
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return StatusCode(500, $"Erro interno ao buscar pagamentos: {ex.Message}");
+                await Log.LogToFile("log_", $"COD:1005-5 ,Erro interno ao buscar pagamentos");
+                return StatusCode(500, $"COD:1005-5 ,Erro interno do servidor");
             }
         }
 
@@ -41,15 +44,18 @@ namespace DBZapTend.Controllers
             {
                 if (payment is null)
                 {
-                    return BadRequest("Dados inválidos");
+                    await Log.LogToFile("log_", "COD:1005-4 ,Dados inválidos ao criar pagamento");
+                    return BadRequest("COD:1005-4 ,Dados inválidos");
                 }
 
                 var createdPayment = await _repository.CreatePayment(payment);
-                return Ok(createdPayment);
+                await Log.LogToFile("log_", $"COD:1005-2 ,Pagamento criado com sucesso");
+                return Ok(new { Message = "COD:1005-2 ,Pagamento criado com sucesso", Payment = createdPayment });
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return StatusCode(500, $"Erro interno ao criar pagamento: {ex.Message}");
+                await Log.LogToFile("log_", $"COD:1005-5 ,Erro interno ao criar pagamento");
+                return StatusCode(500, $"COD:1005-5 ,Erro interno do servidor");
             }
         }
 
@@ -62,14 +68,17 @@ namespace DBZapTend.Controllers
 
                 if (payment == null)
                 {
-                    return NotFound("Pagamento não encontrado");
+                    await Log.LogToFile("log_", $"COD:1005-4 ,Pagamento não encontrado: {id}");
+                    return NotFound("COD:1005-4 ,Pagamento não encontrado");
                 }
 
-                return Ok(payment);
+                await Log.LogToFile("log_", $"COD:1005-2 ,Pagamento coletado com sucesso: {id}");
+                return Ok(new { Message = "COD:1005-2 ,Pagamento coletado com sucesso", Payment = payment });
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return StatusCode(500, $"Erro interno ao buscar pagamento por ID: {ex.Message}");
+                await Log.LogToFile("log_", $"COD:1005-5 ,Erro interno ao buscar pagamento por ID");
+                return StatusCode(500, $"COD:1005-5 ,Erro interno do servidor");
             }
         }
 
@@ -80,15 +89,18 @@ namespace DBZapTend.Controllers
             {
                 if (id != payment.IdPayments)
                 {
-                    return BadRequest("Dados inválidos");
+                    await Log.LogToFile("log_", "COD:1005-4 ,Dados inválidos ao atualizar pagamento");
+                    return BadRequest("COD:1005-4 ,Dados inválidos");
                 }
 
-                var updatePayment = await _repository.UpdatePayment(payment);
-                return Ok(updatePayment);
+                var updatedPayment = await _repository.UpdatePayment(payment);
+                await Log.LogToFile("log_", $"COD:1005-2 ,Pagamento atualizado com sucesso: {id}");
+                return Ok(new { Message = "COD:1005-2 ,Pagamento atualizado com sucesso", Payment = updatedPayment });
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return StatusCode(500, $"Erro interno ao atualizar pagamento: {ex.Message}");
+                await Log.LogToFile("log_", $"COD:1005-5 ,Erro interno ao atualizar pagamento");
+                return StatusCode(500, $"COD:1005-5 ,Erro interno do servidor");
             }
         }
 
@@ -101,15 +113,18 @@ namespace DBZapTend.Controllers
 
                 if (payment == null)
                 {
-                    return NotFound("Pagamento não encontrado");
+                    await Log.LogToFile("log_", $"COD:1005-4 ,Pagamento não encontrado: {id}");
+                    return NotFound("COD:1005-4 ,Pagamento não encontrado");
                 }
 
                 var deletePayment = await _repository.DeletePayment(id);
-                return Ok(deletePayment);
+                await Log.LogToFile("log_", $"COD:1005-2 ,Pagamento deletado com sucesso: {id}");
+                return Ok(new { Message = "COD:1005-2 ,Pagamento deletado com sucesso", Payment = deletePayment });
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return StatusCode(500, $"Erro interno ao deletar pagamento: {ex.Message}");
+                await Log.LogToFile("log_", $"COD:1005-5 ,Erro interno ao deletar pagamento");
+                return StatusCode(500, $"COD:1005-5 ,Erro interno do servidor");
             }
         }
     }

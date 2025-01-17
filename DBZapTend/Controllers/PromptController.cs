@@ -1,4 +1,5 @@
 ﻿using DBZapTend.DTO;
+using DBZapTend.Logs;
 using DBZapTend.Models;
 using DBZapTend.Repository;
 using Microsoft.AspNetCore.Authorization;
@@ -26,12 +27,14 @@ namespace DBZapTend.Controllers
         {
             try
             {
-                var prompt = await _repository.GetPrompts();
-                return Ok(prompt);
+                var prompts = await _repository.GetPrompts();
+                await Log.LogToFile("log_", "COD:1007-2 ,Prompts coletados com sucesso");
+                return Ok(new { Message = "COD:1007-2 ,Prompts coletados com sucesso", Prompts = prompts });
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return StatusCode(500, $"Erro interno ao buscar prompts: {ex.Message}");
+                await Log.LogToFile("log_", $"COD:1007-5 ,Erro interno ao buscar prompts");
+                return StatusCode(500, $"COD:1007-5 ,Erro interno do servidor");
             }
         }
 
@@ -42,15 +45,18 @@ namespace DBZapTend.Controllers
             {
                 if (prompt is null)
                 {
-                    return BadRequest("Dados inválidos");
+                    await Log.LogToFile("log_", "COD:1007-4 ,Dados inválidos ao criar prompt");
+                    return BadRequest("COD:1007-4 ,Dados inválidos");
                 }
 
                 var createdPrompt = await _repository.CreatePrompt(prompt);
-                return Ok(createdPrompt);
+                await Log.LogToFile("log_", $"COD:1007-2 ,Prompt criado com sucesso");
+                return Ok(new { Message = "COD:1007-2 ,Prompt criado com sucesso", Prompt = createdPrompt });
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return StatusCode(500, $"Erro interno ao criar prompt: {ex.Message}");
+                await Log.LogToFile("log_", $"COD:1007-5 ,Erro interno ao criar prompt");
+                return StatusCode(500, $"COD:1007-5 ,Erro interno do servidor");
             }
         }
 
@@ -63,26 +69,32 @@ namespace DBZapTend.Controllers
 
                 if (prompt == null)
                 {
-                    return NotFound("Usuário não encontrado");
+                    await Log.LogToFile("log_", $"COD:1007-4 ,Prompt não encontrado: {id}");
+                    return NotFound("COD:1007-4 ,Prompt não encontrado");
                 }
 
-                return Ok(prompt);
+                await Log.LogToFile("log_", $"COD:1007-2 ,Prompt coletado com sucesso: {id}");
+                return Ok(new { Message = "COD:1007-2 ,Prompt coletado com sucesso", Prompt = prompt });
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return StatusCode(500, $"Erro interno ao buscar prompt por ID: {ex.Message}");
+                await Log.LogToFile("log_", $"COD:1007-5 ,Erro interno ao buscar prompt por ID");
+                return StatusCode(500, $"COD:1007-5 ,Erro interno do servidor");
             }
         }
 
         [HttpPatch("{id:int}")]
         public async Task<ActionResult<Prompt>> UpdatePrompt(int id, [FromBody] UpdatePromptDto prompt)
         {
-            try {
+            try
+            {
                 var findPrompt = await _repository.GetPrompt(id);
 
                 if (findPrompt is null)
-                    throw new ArgumentException("Prompt não encontrado.");
-
+                {
+                    await Log.LogToFile("log_", $"COD:1007-4 ,Prompt não encontrado: {id}");
+                    return NotFound("COD:1007-4 ,Prompt não encontrado");
+                }
 
                 if (!string.IsNullOrWhiteSpace(prompt.Title))
                 {
@@ -99,15 +111,14 @@ namespace DBZapTend.Controllers
                     findPrompt.NichosIdNichos = prompt.NichosIdNichos.Value;
                 }
 
-
                 await _repository.UpdatePrompt(findPrompt);
-
-                return Ok("Atualizado com sucesso");
+                await Log.LogToFile("log_", $"COD:1007-2 ,Prompt atualizado com sucesso: {id}");
+                return Ok(new { Message = "COD:1007-2 ,Prompt atualizado com sucesso", Prompt = findPrompt });
             }
-            catch(Exception ex) 
+            catch (Exception)
             {
-                return StatusCode(500, $"Erro interno ao Atualizar prompt: {ex.Message}");
-
+                await Log.LogToFile("log_", $"COD:1007-5 ,Erro interno ao atualizar prompt");
+                return StatusCode(500, $"COD:1007-5 ,Erro interno do servidor");
             }
         }
 
@@ -120,14 +131,17 @@ namespace DBZapTend.Controllers
 
                 if (deletePrompt == null)
                 {
-                    return NotFound("Usuário não encontrado");
+                    await Log.LogToFile("log_", $"COD:1007-4 ,Prompt não encontrado: {id}");
+                    return NotFound("COD:1007-4 ,Prompt não encontrado");
                 }
 
-                return Ok(deletePrompt);
+                await Log.LogToFile("log_", $"COD:1007-2 ,Prompt deletado com sucesso: {id}");
+                return Ok(new { Message = "COD:1007-2 ,Prompt deletado com sucesso", Prompt = deletePrompt });
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return StatusCode(500, $"Erro interno ao deletar prompt: {ex.Message}");
+                await Log.LogToFile("log_", $"COD:1007-5 ,Erro interno ao deletar prompt");
+                return StatusCode(500, $"COD:1007-5 ,Erro interno do servidor");
             }
         }
     }

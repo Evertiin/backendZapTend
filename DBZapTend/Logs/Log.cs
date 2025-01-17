@@ -1,4 +1,6 @@
-﻿namespace DBZapTend.Logs
+﻿using System.Data;
+
+namespace DBZapTend.Logs
 {
 
     public static class Log
@@ -23,7 +25,7 @@
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Erro ao escrever no arquivo de log: {ex.Message}");
+                throw new($"Erro ao escrever no arquivo de log: {ex.Message}");
             }
             finally
             {

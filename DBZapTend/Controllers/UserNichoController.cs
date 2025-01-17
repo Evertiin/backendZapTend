@@ -1,4 +1,5 @@
-﻿using DBZapTend.Models;
+﻿using DBZapTend.Logs;
+using DBZapTend.Models;
 using DBZapTend.Repository;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -26,11 +27,13 @@ namespace DBZapTend.Controllers
             try
             {
                 var userNichos = await _repository.GetUserNichos();
-                return Ok(userNichos);
+                await Log.LogToFile("log_", "COD:1008-2 ,UserNichos coletados com sucesso");
+                return Ok(new { Message = "COD:1008-2 ,UserNichos coletados com sucesso", UserNichos = userNichos });
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return StatusCode(500, $"Erro interno ao buscar UserNichos: {ex.Message}");
+                await Log.LogToFile("log_", $"COD:1008-5 ,Erro interno ao buscar UserNichos");
+                return StatusCode(500, $"COD:1008-5 ,Erro interno do servidor");
             }
         }
 
@@ -41,15 +44,18 @@ namespace DBZapTend.Controllers
             {
                 if (userNicho is null)
                 {
-                    return BadRequest("Dados inválidos");
+                    await Log.LogToFile("log_", "COD:1008-4 ,Dados inválidos ao criar UserNicho");
+                    return BadRequest("COD:1008-4 ,Dados inválidos");
                 }
 
                 var createdUserNicho = await _repository.CreateUserNicho(userNicho);
-                return Ok(createdUserNicho);
+                await Log.LogToFile("log_", $"COD:1008-2 ,UserNicho criado com sucesso");
+                return Ok(new { Message = "COD:1008-2 ,UserNicho criado com sucesso", UserNicho = createdUserNicho });
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return StatusCode(500, $"Erro interno ao criar UserNicho: {ex.Message}");
+                await Log.LogToFile("log_", $"COD:1008-5 ,Erro interno ao criar UserNicho");
+                return StatusCode(500, $"COD:1008-5 ,Erro interno do servidor");
             }
         }
 
@@ -62,14 +68,17 @@ namespace DBZapTend.Controllers
 
                 if (userNicho == null)
                 {
-                    return NotFound("UserNicho não encontrado");
+                    await Log.LogToFile("log_", $"COD:1008-4 ,UserNicho não encontrado: {id}");
+                    return NotFound("COD:1008-4 ,UserNicho não encontrado");
                 }
 
-                return Ok(userNicho);
+                await Log.LogToFile("log_", $"COD:1008-2 ,UserNicho coletado com sucesso: {id}");
+                return Ok(new { Message = "COD:1008-2 ,UserNicho coletado com sucesso", UserNicho = userNicho });
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return StatusCode(500, $"Erro interno ao buscar UserNicho por ID: {ex.Message}");
+                await Log.LogToFile("log_", $"COD:1008-5 ,Erro interno ao buscar UserNicho por ID");
+                return StatusCode(500, $"COD:1008-5 ,Erro interno do servidor");
             }
         }
 
@@ -80,15 +89,18 @@ namespace DBZapTend.Controllers
             {
                 if (id != userNicho.IdUserNichos)
                 {
-                    return BadRequest("Dados inválidos");
+                    await Log.LogToFile("log_", "COD:1008-4 ,Dados inválidos ao atualizar UserNicho");
+                    return BadRequest("COD:1008-4 ,Dados inválidos");
                 }
 
-                var updateUserNicho = await _repository.UpdateUserNicho(userNicho);
-                return Ok(updateUserNicho);
+                var updatedUserNicho = await _repository.UpdateUserNicho(userNicho);
+                await Log.LogToFile("log_", $"COD:1008-2 ,UserNicho atualizado com sucesso: {id}");
+                return Ok(new { Message = "COD:1008-2 ,UserNicho atualizado com sucesso", UserNicho = updatedUserNicho });
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return StatusCode(500, $"Erro interno ao atualizar UserNicho: {ex.Message}");
+                await Log.LogToFile("log_", $"COD:1008-5 ,Erro interno ao atualizar UserNicho");
+                return StatusCode(500, $"COD:1008-5 ,Erro interno do servidor");
             }
         }
 
@@ -101,15 +113,18 @@ namespace DBZapTend.Controllers
 
                 if (userNicho == null)
                 {
-                    return NotFound("UserNicho não encontrado");
+                    await Log.LogToFile("log_", $"COD:1008-4 ,UserNicho não encontrado: {id}");
+                    return NotFound("COD:1008-4 ,UserNicho não encontrado");
                 }
 
                 var deleteUserNicho = await _repository.DeleteUserNicho(id);
-                return Ok(deleteUserNicho);
+                await Log.LogToFile("log_", $"COD:1008-2 ,UserNicho deletado com sucesso: {id}");
+                return Ok(new { Message = "COD:1008-2 ,UserNicho deletado com sucesso", UserNicho = deleteUserNicho });
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return StatusCode(500, $"Erro interno ao deletar UserNicho: {ex.Message}");
+                await Log.LogToFile("log_", $"COD:1008-5 ,Erro interno ao deletar UserNicho");
+                return StatusCode(500, $"COD:1008-5 ,Erro interno do servidor");
             }
         }
     }

@@ -1,4 +1,5 @@
 ﻿using DBZapTend.DTO;
+using DBZapTend.Logs;
 using DBZapTend.Models;
 using DBZapTend.Repository;
 using Microsoft.AspNetCore.Authorization;
@@ -27,11 +28,13 @@ namespace DBZapTend.Controllers
             try
             {
                 var variaveis = await _repository.GetVariaveis();
-                return Ok(variaveis);
+                await Log.LogToFile("log_", "COD:1010-2 ,Variáveis coletadas com sucesso");
+                return Ok(new { Message = "COD:1010-2 ,Variáveis coletadas com sucesso", Variaveis = variaveis });
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return StatusCode(500, $"Erro interno ao buscar variáveis: {ex.Message}");
+                await Log.LogToFile("log_", $"COD:1010-5 ,Erro interno ao buscar variáveis");
+                return StatusCode(500, $"COD:1010-5 ,Erro interno do servidor");
             }
         }
 
@@ -42,15 +45,18 @@ namespace DBZapTend.Controllers
             {
                 if (variavei is null)
                 {
-                    return BadRequest("Dados inválidos");
+                    await Log.LogToFile("log_", "COD:1010-4 ,Dados inválidos ao criar variável");
+                    return BadRequest("COD:1010-4 ,Dados inválidos");
                 }
 
                 var createdVariavel = await _repository.CreateVariavei(variavei);
-                return Ok(createdVariavel);
+                await Log.LogToFile("log_", $"COD:1010-2 ,Variável criada com sucesso");
+                return Ok(new { Message = "COD:1010-2 ,Variável criada com sucesso", Variavel = createdVariavel });
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return StatusCode(500, $"Erro interno ao criar variável: {ex.Message}");
+                await Log.LogToFile("log_", "COD:1010-5 ,Erro interno ao criar variável");
+                return StatusCode(500, $"COD:1010-5 ,Erro interno do servidor");
             }
         }
 
@@ -63,14 +69,17 @@ namespace DBZapTend.Controllers
 
                 if (variavei == null)
                 {
-                    return NotFound("Variável não encontrada");
+                    await Log.LogToFile("log_", $"COD:1010-4 ,Variável não encontrada: {id}");
+                    return NotFound("COD:1010-4 ,Variável não encontrada");
                 }
 
-                return Ok(variavei);
+                await Log.LogToFile("log_", $"COD:1010-2 ,Variável coletada com sucesso: {id}");
+                return Ok(new { Message = "COD:1010-2 ,Variável coletada com sucesso", Variavel = variavei });
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return StatusCode(500, $"Erro interno ao buscar variável por ID: {ex.Message}");
+                await Log.LogToFile("log_", $"COD:1010-5 ,Erro interno ao buscar variável por ID");
+                return StatusCode(500, $"COD:1010-5 ,Erro interno do servidor");
             }
         }
 
@@ -82,8 +91,10 @@ namespace DBZapTend.Controllers
                 var findVariavel = await _repository.GetVariavei(id);
 
                 if (findVariavel is null)
-                    throw new ArgumentException("Prompt não encontrado.");
-
+                {
+                    await Log.LogToFile("log_", $"COD:1010-4 ,Variável não encontrada: {id}");
+                    return NotFound("COD:1010-4 ,Variável não encontrada");
+                }
 
                 if (!string.IsNullOrWhiteSpace(variavei.Name))
                 {
@@ -96,12 +107,13 @@ namespace DBZapTend.Controllers
                 }
 
                 await _repository.UpdateVariavei(findVariavel);
-
-                return Ok("Atualizado com sucesso");
+                await Log.LogToFile("log_", $"COD:1010-2 ,Variável atualizada com sucesso: {id}");
+                return Ok(new { Message = "COD:1010-2 ,Variável atualizada com sucesso", Variavel = findVariavel });
             }
-            catch (Exception ex) 
+            catch (Exception)
             {
-                return StatusCode(500, $"Erro interno ao Atualizar variável: {ex.Message}");
+                await Log.LogToFile("log_", $"COD:1010-5 ,Erro interno ao atualizar variável");
+                return StatusCode(500, $"COD:1010-5 ,Erro interno do servidor");
             }
         }
 
@@ -114,15 +126,18 @@ namespace DBZapTend.Controllers
 
                 if (variavel == null)
                 {
-                    return NotFound("Variável não encontrada");
+                    await Log.LogToFile("log_", $"COD:1010-4 ,Variável não encontrada: {id}");
+                    return NotFound("COD:1010-4 ,Variável não encontrada");
                 }
 
                 var deleteVariavel = await _repository.DeleteVariavei(id);
-                return Ok(deleteVariavel);
+                await Log.LogToFile("log_", $"COD:1010-2 ,Variável deletada com sucesso: {id}");
+                return Ok(new { Message = "COD:1010-2 ,Variável deletada com sucesso", Variavel = deleteVariavel });
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return StatusCode(500, $"Erro interno ao deletar variável: {ex.Message}");
+                await Log.LogToFile("log_", $"COD:1010-5 ,Erro interno ao deletar variável");
+                return StatusCode(500, $"COD:1010-5 ,Erro interno do servidor");
             }
         }
     }

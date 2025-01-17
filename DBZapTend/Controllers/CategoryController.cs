@@ -29,13 +29,13 @@ namespace DBZapTend.Controllers
             try
             {
                 var categories = await _repository.GetCategorys();
-                await Log.LogToFile("log_", "");
-                return Ok(categories);
-                
+                await Log.LogToFile("log_", "COD:1002-2 ,Categorias coletadas com sucesso");
+                return Ok(new { Message = "COD:1001-2 ,Categorias coletada com sucesso", Category = categories });
             }
             catch (Exception ex)
             {
-                return StatusCode(500, $"Erro interno do servidor: {ex.Message}");
+                await Log.LogToFile("log_", $"COD:1002-5 ,Erro interno ao buscar categorias: {ex.Message}");
+                return StatusCode(500, $"COD:1002-5 ,Erro interno do servidor");
             }
         }
 
@@ -46,15 +46,18 @@ namespace DBZapTend.Controllers
             {
                 if (category is null)
                 {
-                    return BadRequest("Dados inválidos");
+                    await Log.LogToFile("log_", "COD:1002-4 ,Dados inválidos ao criar categoria");
+                    return BadRequest("COD:1002-4 ,Dados inválidos");
                 }
 
                 var createdCategory = await _repository.CreateCategory(category);
-                return Ok(createdCategory);
+                await Log.LogToFile("log_", $"COD:1002-2 ,Categoria criada com sucesso");
+                return Ok(new { Message = "COD:1001-2 ,Categoria criada com sucesso", Category = createdCategory });
             }
             catch (Exception ex)
             {
-                return StatusCode(500, $"Erro interno do servidor: {ex.Message}");
+                await Log.LogToFile("log_", $"COD:1002-5 ,Erro interno ao criar categoria: {ex.Message}");
+                return StatusCode(500, $"COD:1002-5 ,Erro interno do servidor");
             }
         }
 
@@ -67,14 +70,17 @@ namespace DBZapTend.Controllers
 
                 if (category == null)
                 {
-                    return NotFound("Categoria não encontrada");
+                    await Log.LogToFile("log_", $"COD:1002-4 ,Categoria não encontrada: {id}");
+                    return NotFound("COD:1002-4 ,Categoria não encontrada");
                 }
 
+                await Log.LogToFile("log_", $"COD:1002-2 ,Categoria coletada com sucesso: {id}");
                 return Ok(category);
             }
             catch (Exception ex)
             {
-                return StatusCode(500, $"Erro interno do servidor: {ex.Message}");
+                await Log.LogToFile("log_", $"COD:1002-5 ,Erro interno ao buscar categoria: {ex.Message}");
+                return StatusCode(500, $"COD:1002-5 ,Erro interno do servidor");
             }
         }
 
@@ -85,15 +91,18 @@ namespace DBZapTend.Controllers
             {
                 if (id != category.IdCategory)
                 {
-                    return BadRequest("Dados inválidos");
+                    await Log.LogToFile("log_", "COD:1002-4 ,Dados inválidos ao atualizar categoria");
+                    return BadRequest("COD:1002-4 ,Dados inválidos");
                 }
 
                 var updatedCategory = await _repository.UpdateCategory(category);
+                await Log.LogToFile("log_", $"COD:1002-2 ,Categoria atualizada com sucesso: {id}");
                 return Ok(updatedCategory);
             }
             catch (Exception ex)
             {
-                return StatusCode(500, $"Erro interno do servidor: {ex.Message}");
+                await Log.LogToFile("log_", $"COD:1002-5 ,Erro interno ao atualizar categoria: {ex.Message}");
+                return StatusCode(500, $"COD:1002-5 ,Erro interno do servidor");
             }
         }
 
@@ -106,15 +115,18 @@ namespace DBZapTend.Controllers
 
                 if (category == null)
                 {
-                    return NotFound("Categoria não encontrada");
+                    await Log.LogToFile("log_", $"COD:1002-4 ,Categoria não encontrada: {id}");
+                    return NotFound("COD:1002-4 ,Categoria não encontrada");
                 }
 
                 var deletedCategory = await _repository.DeleteCategory(id);
+                await Log.LogToFile("log_", $"COD:1002-2 ,Categoria deletada com sucesso: {id}");
                 return Ok(deletedCategory);
             }
             catch (Exception ex)
             {
-                return StatusCode(500, $"Erro interno do servidor: {ex.Message}");
+                await Log.LogToFile("log_", $"COD:1002-5 ,Erro interno ao deletar categoria: {ex.Message}");
+                return StatusCode(500, $"COD:1002-5 ,Erro interno do servidor");
             }
         }
     }

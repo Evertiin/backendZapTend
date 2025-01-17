@@ -1,0 +1,18 @@
+17/01/2025 12:05:41: COD:1001-2 ,Usuários coletado com sucesso
+17/01/2025 12:06:05: COD:1001-2 ,Usuários coletado com sucesso
+17/01/2025 12:06:08: COD:1001-2 ,Usuários coletado com sucesso
+17/01/2025 12:06:09: COD:1001-5,Erro interno ao buscar usuários: An exception has been raised that is likely due to a transient failure.
+17/01/2025 12:06:51: COD:1001-2 ,Usuários coletado com sucesso
+17/01/2025 12:07:19: COD:1001-2 ,Usuários coletado com sucesso
+17/01/2025 12:07:22: COD:1001-2 ,Usuários coletado com sucesso
+17/01/2025 12:07:25: COD:1001-2 ,Usuários coletado com sucesso
+17/01/2025 12:12:17: COD:1001-2 ,Usuários coletado com sucesso
+17/01/2025 12:12:31: COD:1001-2 ,Usuários coletado com sucesso
+17/01/2025 12:13:42: COD:1001-2 ,Usuários coletado com sucesso
+17/01/2025 12:13:58: COD:1001-2 ,Usuários coletado com sucesso
+17/01/2025 12:14:22: COD:1001-2 ,Usuários coletado com sucesso
+17/01/2025 12:14:23: COD:1001-2 ,Usuários coletado com sucesso
+17/01/2025 12:14:31: COD:1001-2 ,Usuários coletado com sucesso
+17/01/2025 12:14:42: COD:1001-2 ,Usuários coletado com sucesso
+17/01/2025 12:15:08: COD:1001-2 ,Usuários coletado com sucesso
+17/01/2025 12:15:29: COD:1001-2 ,Usuários coletado com sucesso
