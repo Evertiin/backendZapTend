@@ -50,16 +50,17 @@ namespace DBZapTend.Controllers
                 }
 
                 string token;
-                if (userFromDb.Role == "Admin")
-                {
+                token = GenerateTokenJWT(userFromDb.Role);
+                /*if (userFromDb.Role == "Admin"){
+                
                     token = GenerateTokenAdminJWT();
                     await Log.LogToFile("log_", $"COD:1011-2 ,Login de admin realizado com sucesso");
                 }
                 else
                 {
-                    token = GenerateTokenUserJWT();
+                    token = GenerateTokenUserJWT(userFromDb.Role);
                     await Log.LogToFile("log_", $"COD:1011-2 ,Login de usuário realizado com sucesso");
-                }
+                }*/
 
                 return Ok(new { token, user = userFromDb });
             }
@@ -98,7 +99,7 @@ namespace DBZapTend.Controllers
                 throw new Exception("Erro ao gerar o token JWT.", ex);
             }
         }
-        private string GenerateTokenUserJWT()
+        private string GenerateTokenJWT(string role)
         {
             try
             {
@@ -109,7 +110,7 @@ namespace DBZapTend.Controllers
                 var userClaims = new List<Claim>
                 {
                   new Claim(ClaimTypes.Name, "user"),
-                  new Claim(ClaimTypes.Role, "User")
+                  new Claim(ClaimTypes.Role, role)
                 };
 
                 var tokenUser = new JwtSecurityToken(

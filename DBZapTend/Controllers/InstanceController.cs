@@ -31,9 +31,9 @@ namespace DBZapTend.Controllers
                 await Log.LogToFile("log_", "COD:1003-2 ,Todas as instâncias coletadas com sucesso");
                 return Ok(new { Message = "COD:1003-2 ,Todas as instâncias coletadas com sucesso", Instances = instances });
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                await Log.LogToFile("log_", $"COD:1003-5 ,Erro interno ao buscar instâncias");
+                await Log.LogToFile("log_", $"COD:1003-5 ,Erro interno ao buscar instâncias: {ex.Message}");
                 return StatusCode(500, $"COD:1003-5 ,Erro interno do servidor");
             }
         }
@@ -53,9 +53,9 @@ namespace DBZapTend.Controllers
                 await Log.LogToFile("log_", $"COD:1003-2 ,Instância criada com sucesso");
                 return Ok(new { Message = "COD:1003-2 ,Instância criada com sucesso", Instance = createdInstance });
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                await Log.LogToFile("log_", $"COD:1003-5 ,Erro interno ao criar instância");
+                await Log.LogToFile("log_", $"COD:1003-5 ,Erro interno ao criar instância: {ex.Message}");
                 return StatusCode(500, $"COD:1003-5 ,Erro interno do servidor");
             }
         }
@@ -76,9 +76,9 @@ namespace DBZapTend.Controllers
                 await Log.LogToFile("log_", $"COD:1003-2 ,Instância coletada com sucesso: {id}");
                 return Ok(new { Message = "COD:1003-2 ,Instância coletada com sucesso", Instance = instance });
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                await Log.LogToFile("log_", $"COD:1003-5 ,Erro interno ao buscar instância");
+                await Log.LogToFile("log_", $"COD:1003-5 ,Erro interno ao buscar instância: {ex.Message}");
                 return StatusCode(500, $"COD:1003-5 ,Erro interno do servidor");
             }
         }
@@ -104,9 +104,9 @@ namespace DBZapTend.Controllers
                 await Log.LogToFile("log_", $"COD:1003-2 ,Instância atualizada com sucesso: {id}");
                 return Ok(new { Message = "COD:1003-2 ,Instância atualizada com sucesso", Instance = updatedInstance });
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                await Log.LogToFile("log_", $"COD:1003-5 ,Erro interno ao atualizar instância");
+                await Log.LogToFile("log_", $"COD:1003-5 ,Erro interno ao atualizar instância: {ex.Message}");
                 return StatusCode(500, $"COD:1003-5 ,Erro interno do servidor");
             }
         }
@@ -128,9 +128,9 @@ namespace DBZapTend.Controllers
                 await Log.LogToFile("log_", $"COD:1003-2 ,Instância deletada com sucesso: {id}");
                 return Ok(new { Message = "COD:1003-2 ,Instância deletada com sucesso", Instance = deleteResult });
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                await Log.LogToFile("log_", $"COD:1003-5 ,Erro interno ao deletar instância");
+                await Log.LogToFile("log_", $"COD:1003-5 ,Erro interno ao deletar instância: {ex.Message}");
                 return StatusCode(500, $"COD:1003-5 ,Erro interno do servidor");
             }
         }
