@@ -31,9 +31,9 @@ namespace DBZapTend.Controllers
                 await Log.LogToFile("log_", "COD:1007-2 ,Prompts coletados com sucesso");
                 return Ok(new { Message = "COD:1007-2 ,Prompts coletados com sucesso", Prompts = prompts });
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                await Log.LogToFile("log_", $"COD:1007-5 ,Erro interno ao buscar prompts");
+                await Log.LogToFile("log_", $"COD:1007-5 ,Erro interno ao buscar prompts: {ex.Message}");
                 return StatusCode(500, $"COD:1007-5 ,Erro interno do servidor");
             }
         }
@@ -53,9 +53,9 @@ namespace DBZapTend.Controllers
                 await Log.LogToFile("log_", $"COD:1007-2 ,Prompt criado com sucesso");
                 return Ok(new { Message = "COD:1007-2 ,Prompt criado com sucesso", Prompt = createdPrompt });
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                await Log.LogToFile("log_", $"COD:1007-5 ,Erro interno ao criar prompt");
+                await Log.LogToFile("log_", $"COD:1007-5 ,Erro interno ao criar prompt: {ex.Message}");
                 return StatusCode(500, $"COD:1007-5 ,Erro interno do servidor");
             }
         }
@@ -76,9 +76,9 @@ namespace DBZapTend.Controllers
                 await Log.LogToFile("log_", $"COD:1007-2 ,Prompt coletado com sucesso: {id}");
                 return Ok(new { Message = "COD:1007-2 ,Prompt coletado com sucesso", Prompt = prompt });
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                await Log.LogToFile("log_", $"COD:1007-5 ,Erro interno ao buscar prompt por ID");
+                await Log.LogToFile("log_", $"COD:1007-5 ,Erro interno ao buscar prompt por ID: {ex.Message}");
                 return StatusCode(500, $"COD:1007-5 ,Erro interno do servidor");
             }
         }
@@ -115,9 +115,9 @@ namespace DBZapTend.Controllers
                 await Log.LogToFile("log_", $"COD:1007-2 ,Prompt atualizado com sucesso: {id}");
                 return Ok(new { Message = "COD:1007-2 ,Prompt atualizado com sucesso", Prompt = findPrompt });
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                await Log.LogToFile("log_", $"COD:1007-5 ,Erro interno ao atualizar prompt");
+                await Log.LogToFile("log_", $"COD:1007-5 ,Erro interno ao atualizar prompt: {ex.Message}");
                 return StatusCode(500, $"COD:1007-5 ,Erro interno do servidor");
             }
         }
@@ -138,9 +138,9 @@ namespace DBZapTend.Controllers
                 await Log.LogToFile("log_", $"COD:1007-2 ,Prompt deletado com sucesso: {id}");
                 return Ok(new { Message = "COD:1007-2 ,Prompt deletado com sucesso", Prompt = deletePrompt });
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                await Log.LogToFile("log_", $"COD:1007-5 ,Erro interno ao deletar prompt");
+                await Log.LogToFile("log_", $"COD:1007-5 ,Erro interno ao deletar prompt: {ex.Message}");
                 return StatusCode(500, $"COD:1007-5 ,Erro interno do servidor");
             }
         }

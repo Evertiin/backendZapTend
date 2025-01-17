@@ -30,9 +30,9 @@ namespace DBZapTend.Controllers
                 await Log.LogToFile("log_", "COD:1005-2 ,Pagamentos coletados com sucesso");
                 return Ok(new { Message = "COD:1005-2 ,Pagamentos coletados com sucesso", Payments = payments });
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                await Log.LogToFile("log_", $"COD:1005-5 ,Erro interno ao buscar pagamentos");
+                await Log.LogToFile("log_", $"COD:1005-5 ,Erro interno ao buscar pagamentos: {ex.Message}");
                 return StatusCode(500, $"COD:1005-5 ,Erro interno do servidor");
             }
         }
@@ -52,9 +52,9 @@ namespace DBZapTend.Controllers
                 await Log.LogToFile("log_", $"COD:1005-2 ,Pagamento criado com sucesso");
                 return Ok(new { Message = "COD:1005-2 ,Pagamento criado com sucesso", Payment = createdPayment });
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                await Log.LogToFile("log_", $"COD:1005-5 ,Erro interno ao criar pagamento");
+                await Log.LogToFile("log_", $"COD:1005-5 ,Erro interno ao criar pagamento: {ex.Message}");
                 return StatusCode(500, $"COD:1005-5 ,Erro interno do servidor");
             }
         }
@@ -75,9 +75,9 @@ namespace DBZapTend.Controllers
                 await Log.LogToFile("log_", $"COD:1005-2 ,Pagamento coletado com sucesso: {id}");
                 return Ok(new { Message = "COD:1005-2 ,Pagamento coletado com sucesso", Payment = payment });
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                await Log.LogToFile("log_", $"COD:1005-5 ,Erro interno ao buscar pagamento por ID");
+                await Log.LogToFile("log_", $"COD:1005-5 ,Erro interno ao buscar pagamento por ID: {ex.Message}");
                 return StatusCode(500, $"COD:1005-5 ,Erro interno do servidor");
             }
         }
@@ -97,9 +97,9 @@ namespace DBZapTend.Controllers
                 await Log.LogToFile("log_", $"COD:1005-2 ,Pagamento atualizado com sucesso: {id}");
                 return Ok(new { Message = "COD:1005-2 ,Pagamento atualizado com sucesso", Payment = updatedPayment });
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                await Log.LogToFile("log_", $"COD:1005-5 ,Erro interno ao atualizar pagamento");
+                await Log.LogToFile("log_", $"COD:1005-5 ,Erro interno ao atualizar pagamento: {ex.Message}");
                 return StatusCode(500, $"COD:1005-5 ,Erro interno do servidor");
             }
         }
@@ -121,9 +121,9 @@ namespace DBZapTend.Controllers
                 await Log.LogToFile("log_", $"COD:1005-2 ,Pagamento deletado com sucesso: {id}");
                 return Ok(new { Message = "COD:1005-2 ,Pagamento deletado com sucesso", Payment = deletePayment });
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                await Log.LogToFile("log_", $"COD:1005-5 ,Erro interno ao deletar pagamento");
+                await Log.LogToFile("log_", $"COD:1005-5 ,Erro interno ao deletar pagamento: {ex.Message}");
                 return StatusCode(500, $"COD:1005-5 ,Erro interno do servidor");
             }
         }

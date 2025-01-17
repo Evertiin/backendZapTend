@@ -1,4 +1,5 @@
 ﻿using DBZapTend.DTO;
+using DBZapTend.Logs;
 using DBZapTend.Models;
 using DBZapTend.Repository;
 using Microsoft.AspNetCore.Authorization;
@@ -31,12 +32,12 @@ namespace DBZapTend.Controllers
         [HttpPost]
         public async Task<ActionResult<User>> Login(LoginRequestDto request)
         {
-            
             try
             {
                 if (string.IsNullOrEmpty(request.Email) || string.IsNullOrEmpty(request.IdAuthentication))
                 {
-                    return BadRequest("Email e Id são obrigatórios.");
+                    await Log.LogToFile("log_", "COD:1011-4 ,Email e Id são obrigatórios");
+                    return BadRequest("COD:1011-4 ,Email e Id são obrigatórios.");
                 }
 
                 var userFromDb = await _context.Users
@@ -44,24 +45,28 @@ namespace DBZapTend.Controllers
 
                 if (userFromDb == null)
                 {
-                    return NotFound("Usuário não cadastrado ou credenciais incorretas.");
+                    await Log.LogToFile("log_", $"COD:1011-4 ,Usuário não cadastrado ou credenciais incorretas");
+                    return NotFound("COD:1011-4 ,Usuário não cadastrado ou credenciais incorretas.");
                 }
+
                 string token;
                 if (userFromDb.Role == "Admin")
                 {
-                    token = GenerateTokenAdminJWT(); 
+                    token = GenerateTokenAdminJWT();
+                    await Log.LogToFile("log_", $"COD:1011-2 ,Login de admin realizado com sucesso");
                 }
                 else
                 {
-                    token = GenerateTokenUserJWT(); 
+                    token = GenerateTokenUserJWT();
+                    await Log.LogToFile("log_", $"COD:1011-2 ,Login de usuário realizado com sucesso");
                 }
 
-                
                 return Ok(new { token, user = userFromDb });
             }
             catch (Exception ex)
             {
-                return StatusCode(500, $"Erro interno do servidor: {ex.Message}");
+                await Log.LogToFile("log_", $"COD:1011-5 ,Erro interno ao realizar login: {ex.Message}");
+                return StatusCode(500, $"COD:1011-5 ,Erro interno do servidor");
             }
         }
 

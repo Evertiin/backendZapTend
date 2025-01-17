@@ -33,9 +33,9 @@ namespace DBZapTend.Controllers
                 await Log.LogToFile("log_", "COD:1001-2 ,Usuários coletado com sucesso");
                 return Ok(new { Message = "COD:1001-2 ,Usuários coletado com sucesso", Users = users });
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                await Log.LogToFile("log_", $"COD:1001-5,Erro interno ao buscar usuários");
+                await Log.LogToFile("log_", $"COD:1001-5,Erro interno ao buscar usuários: {ex.Message}");
                 return StatusCode(500, $"COD:1001-5,Erro interno ao buscar usuários");
             }
         }
@@ -67,9 +67,9 @@ namespace DBZapTend.Controllers
                 await Log.LogToFile("log_", $"COD:1001-2 ,Usuário criado com sucesso");
                 return Ok(new { Message = "COD:1001-2 ,Usuário criado com sucesso", Users = user });
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                await Log.LogToFile("log_", $"COD:1001-5 ,Erro interno do servidor");
+                await Log.LogToFile("log_", $"COD:1001-5 ,Erro interno do servidor: {ex.Message}");
                 return StatusCode(500, "COD:1001-5,Erro interno ao criar usuário");
             }
         }
@@ -90,9 +90,9 @@ namespace DBZapTend.Controllers
                 return Ok(new { Message = "COD:1001-2 ,Usuário coletado com sucesso", Users = user });
                
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                await Log.LogToFile("log_", $"COD:1001-5 ,Erro interno do servidor ao buscar usuário");
+                await Log.LogToFile("log_", $"COD:1001-5 ,Erro interno do servidor ao buscar usuário: {ex.Message}");
                 return StatusCode(500, "COD:1001-5,Erro interno do servidor ao buscar usuário");
                 
             }
@@ -145,9 +145,9 @@ namespace DBZapTend.Controllers
                 await Log.LogToFile("log_", $"COD:1001-2 ,Atualizado com sucesso");
                 return Ok("COD:1001-2,Atualizado com sucesso");
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                await Log.LogToFile("log_", $"COD:1001-5 ,Erro interno do servidor ao atualizar usuário");
+                await Log.LogToFile("log_", $"COD:1001-5 ,Erro interno do servidor ao atualizar usuário: {ex.Message}");
                 return StatusCode(500, "COD:1001-5, Erro interno ao Atualizar Usuário");
             }
         }
@@ -167,9 +167,9 @@ namespace DBZapTend.Controllers
                 await Log.LogToFile("log_", $"COD:1001-2 ,Usuário deletado com sucesso");
                 return Ok("COD:1001-2 ,Usuário deletado com sucesso");
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                await Log.LogToFile("log_", $"COD:1001-5 ,Erro interno do servidor ao atualizar usuário");
+                await Log.LogToFile("log_", $"COD:1001-5 ,Erro interno do servidor ao atualizar usuário: {ex.Message}");
                 return StatusCode(500, "COD:1001-5, Erro interno ao Atualizar Usuário:");
             }
         }

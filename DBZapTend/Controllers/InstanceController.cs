@@ -28,14 +28,13 @@ namespace DBZapTend.Controllers
             try
             {
                 var instances = await _repository.GetInstances();
-                await Log.LogToFile("log_", "Todas as instancias coletadas");
-
-                return Ok(instances);
+                await Log.LogToFile("log_", "COD:1003-2 ,Todas as instâncias coletadas com sucesso");
+                return Ok(new { Message = "COD:1003-2 ,Todas as instâncias coletadas com sucesso", Instances = instances });
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                await Log.LogToFile("log_", $"COD:1002-5 ,Erro interno do servidor: {ex.Message}");
-                return StatusCode(500, $"Erro interno do servidor: {ex.Message}");
+                await Log.LogToFile("log_", $"COD:1003-5 ,Erro interno ao buscar instâncias");
+                return StatusCode(500, $"COD:1003-5 ,Erro interno do servidor");
             }
         }
 
@@ -46,20 +45,18 @@ namespace DBZapTend.Controllers
             {
                 if (string.IsNullOrEmpty(instance.Name))
                 {
-                    await Log.LogToFile("log_", "Dados inválidos");
-                    return BadRequest("Dados inválidos");
+                    await Log.LogToFile("log_", "COD:1003-4 ,Dados inválidos ao criar instância");
+                    return BadRequest("COD:1003-4 ,Dados inválidos");
                 }
 
-
                 var createdInstance = await _repository.CreateInstance(instance);
-                await Log.LogToFile("log_", "Instancia criada");
-                return Ok(createdInstance);
-
+                await Log.LogToFile("log_", $"COD:1003-2 ,Instância criada com sucesso");
+                return Ok(new { Message = "COD:1003-2 ,Instância criada com sucesso", Instance = createdInstance });
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                await Log.LogToFile("log_", $"COD:1002-5 ,Erro interno do servidor: {ex.Message}");
-                return StatusCode(500, $"Erro interno do servidor: {ex.Message}");
+                await Log.LogToFile("log_", $"COD:1003-5 ,Erro interno ao criar instância");
+                return StatusCode(500, $"COD:1003-5 ,Erro interno do servidor");
             }
         }
 
@@ -72,16 +69,17 @@ namespace DBZapTend.Controllers
 
                 if (instance == null)
                 {
-                    await Log.LogToFile("log_", "Instância não encontrada");
-                    return NotFound("Instância não encontrada");
+                    await Log.LogToFile("log_", $"COD:1003-4 ,Instância não encontrada: {id}");
+                    return NotFound("COD:1003-4 ,Instância não encontrada");
                 }
 
-                return Ok(instance);
+                await Log.LogToFile("log_", $"COD:1003-2 ,Instância coletada com sucesso: {id}");
+                return Ok(new { Message = "COD:1003-2 ,Instância coletada com sucesso", Instance = instance });
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                await Log.LogToFile("log_", $"COD:1002-5 ,Erro interno do servidor: {ex.Message}");
-                return StatusCode(500, $"Erro interno do servidor: {ex.Message}");
+                await Log.LogToFile("log_", $"COD:1003-5 ,Erro interno ao buscar instância");
+                return StatusCode(500, $"COD:1003-5 ,Erro interno do servidor");
             }
         }
 
@@ -92,24 +90,24 @@ namespace DBZapTend.Controllers
             {
                 if (string.IsNullOrEmpty(instance.Name))
                 {
-                    await Log.LogToFile("log_", "Dados inválidos");
-                    return BadRequest("Dados inválidos");
+                    await Log.LogToFile("log_", "COD:1003-4 ,Dados inválidos ao atualizar instância");
+                    return BadRequest("COD:1003-4 ,Dados inválidos");
                 }
 
                 if (id != instance.Id)
                 {
-                    await Log.LogToFile("log_", "Dados inválidos");
-                    return BadRequest("Dados inválidos");
+                    await Log.LogToFile("log_", "COD:1003-4 ,Dados inválidos ao atualizar instância");
+                    return BadRequest("COD:1003-4 ,Dados inválidos");
                 }
 
                 var updatedInstance = await _repository.UpdateInstance(instance);
-                await Log.LogToFile("log_", "Instancia atuaizada com sucesso");
-                return Ok(updatedInstance);
+                await Log.LogToFile("log_", $"COD:1003-2 ,Instância atualizada com sucesso: {id}");
+                return Ok(new { Message = "COD:1003-2 ,Instância atualizada com sucesso", Instance = updatedInstance });
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                await Log.LogToFile("log_", $"COD:1002-5 ,Erro interno do servidor: {ex.Message}");
-                return StatusCode(500, $"Erro interno do servidor: {ex.Message}");
+                await Log.LogToFile("log_", $"COD:1003-5 ,Erro interno ao atualizar instância");
+                return StatusCode(500, $"COD:1003-5 ,Erro interno do servidor");
             }
         }
 
@@ -122,18 +120,18 @@ namespace DBZapTend.Controllers
 
                 if (instance == null)
                 {
-                    await Log.LogToFile("log_", "Instância não encontrada");
-                    return NotFound("Instância não encontrada");
+                    await Log.LogToFile("log_", $"COD:1003-4 ,Instância não encontrada: {id}");
+                    return NotFound("COD:1003-4 ,Instância não encontrada");
                 }
 
                 var deleteResult = await _repository.DeleteInstance(id);
-                await Log.LogToFile("log_", "Instancia deletada com sucesso");
-                return Ok(deleteResult);
+                await Log.LogToFile("log_", $"COD:1003-2 ,Instância deletada com sucesso: {id}");
+                return Ok(new { Message = "COD:1003-2 ,Instância deletada com sucesso", Instance = deleteResult });
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                await Log.LogToFile("log_", $"COD:1002-5 ,Erro interno do servidor: {ex.Message}");
-                return StatusCode(500, $"Erro interno do servidor: {ex.Message}");
+                await Log.LogToFile("log_", $"COD:1003-5 ,Erro interno ao deletar instância");
+                return StatusCode(500, $"COD:1003-5 ,Erro interno do servidor");
             }
         }
     }

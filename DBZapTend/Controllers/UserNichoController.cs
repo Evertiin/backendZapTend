@@ -30,9 +30,9 @@ namespace DBZapTend.Controllers
                 await Log.LogToFile("log_", "COD:1008-2 ,UserNichos coletados com sucesso");
                 return Ok(new { Message = "COD:1008-2 ,UserNichos coletados com sucesso", UserNichos = userNichos });
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                await Log.LogToFile("log_", $"COD:1008-5 ,Erro interno ao buscar UserNichos");
+                await Log.LogToFile("log_", $"COD:1008-5 ,Erro interno ao buscar UserNichos: {ex.Message}");
                 return StatusCode(500, $"COD:1008-5 ,Erro interno do servidor");
             }
         }
@@ -52,9 +52,9 @@ namespace DBZapTend.Controllers
                 await Log.LogToFile("log_", $"COD:1008-2 ,UserNicho criado com sucesso");
                 return Ok(new { Message = "COD:1008-2 ,UserNicho criado com sucesso", UserNicho = createdUserNicho });
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                await Log.LogToFile("log_", $"COD:1008-5 ,Erro interno ao criar UserNicho");
+                await Log.LogToFile("log_", $"COD:1008-5 ,Erro interno ao criar UserNicho: {ex.Message}");
                 return StatusCode(500, $"COD:1008-5 ,Erro interno do servidor");
             }
         }
@@ -75,9 +75,9 @@ namespace DBZapTend.Controllers
                 await Log.LogToFile("log_", $"COD:1008-2 ,UserNicho coletado com sucesso: {id}");
                 return Ok(new { Message = "COD:1008-2 ,UserNicho coletado com sucesso", UserNicho = userNicho });
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                await Log.LogToFile("log_", $"COD:1008-5 ,Erro interno ao buscar UserNicho por ID");
+                await Log.LogToFile("log_", $"COD:1008-5 ,Erro interno ao buscar UserNicho por ID: {ex.Message}");
                 return StatusCode(500, $"COD:1008-5 ,Erro interno do servidor");
             }
         }
@@ -97,9 +97,9 @@ namespace DBZapTend.Controllers
                 await Log.LogToFile("log_", $"COD:1008-2 ,UserNicho atualizado com sucesso: {id}");
                 return Ok(new { Message = "COD:1008-2 ,UserNicho atualizado com sucesso", UserNicho = updatedUserNicho });
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                await Log.LogToFile("log_", $"COD:1008-5 ,Erro interno ao atualizar UserNicho");
+                await Log.LogToFile("log_", $"COD:1008-5 ,Erro interno ao atualizar UserNicho: {ex.Message}");
                 return StatusCode(500, $"COD:1008-5 ,Erro interno do servidor");
             }
         }
@@ -121,9 +121,9 @@ namespace DBZapTend.Controllers
                 await Log.LogToFile("log_", $"COD:1008-2 ,UserNicho deletado com sucesso: {id}");
                 return Ok(new { Message = "COD:1008-2 ,UserNicho deletado com sucesso", UserNicho = deleteUserNicho });
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                await Log.LogToFile("log_", $"COD:1008-5 ,Erro interno ao deletar UserNicho");
+                await Log.LogToFile("log_", $"COD:1008-5 ,Erro interno ao deletar UserNicho: {ex.Message}");
                 return StatusCode(500, $"COD:1008-5 ,Erro interno do servidor");
             }
         }
