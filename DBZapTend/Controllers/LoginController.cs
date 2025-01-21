@@ -51,6 +51,7 @@ namespace DBZapTend.Controllers
 
                 string token;
                 token = GenerateTokenJWT(userFromDb.Role);
+
                 /*if (userFromDb.Role == "Admin"){
                 
                     token = GenerateTokenAdminJWT();
@@ -61,7 +62,7 @@ namespace DBZapTend.Controllers
                     token = GenerateTokenUserJWT(userFromDb.Role);
                     await Log.LogToFile("log_", $"COD:1011-2 ,Login de usuário realizado com sucesso");
                 }*/
-
+                await Log.LogToFile("log_", $"COD:1011-2 ,Login de admin realizado com sucesso");
                 return Ok(new { token, user = userFromDb });
             }
             catch (Exception ex)
@@ -70,35 +71,7 @@ namespace DBZapTend.Controllers
                 return StatusCode(500, $"COD:1011-5 ,Erro interno do servidor");
             }
         }
-
-        private string GenerateTokenAdminJWT()
-        {
-            try
-            {
-                string secretKey = Program.secretKey;
-                var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey));
-                var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
-
-                var adminClaims = new List<Claim>
-                {
-                  new Claim(ClaimTypes.Name, "adminUser"),
-                  new Claim(ClaimTypes.Role, "Admin")
-                };
-
-                var tokenAdmin = new JwtSecurityToken(
-                    issuer: "StarAnyTech",
-                    audience: "ZapTend",
-                    claims: adminClaims,
-                    expires: DateTime.Now.AddHours(1),
-                    signingCredentials: creds);
-
-                return new JwtSecurityTokenHandler().WriteToken(tokenAdmin);
-            }
-            catch (Exception ex)
-            {
-                throw new Exception("Erro ao gerar o token JWT.", ex);
-            }
-        }
+    
         private string GenerateTokenJWT(string role)
         {
             try
@@ -109,7 +82,7 @@ namespace DBZapTend.Controllers
 
                 var userClaims = new List<Claim>
                 {
-                  new Claim(ClaimTypes.Name, "user"),
+                  //new Claim(ClaimTypes.Name, "user"),
                   new Claim(ClaimTypes.Role, role)
                 };
 

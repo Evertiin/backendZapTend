@@ -1,31 +1,6 @@
-﻿# Ignorar pastas de build e dependências
-bin/
+﻿bin/
 obj/
-
-# Ignorar arquivos de configuração local
-appsettings.Development.json
-
-# Ignorar arquivos de usuário específicos do Visual Studio
+.vscode/
+.vs/
 *.user
 *.suo
-
-# Ignorar logs e arquivos temporários
-*.log
-*.tmp
-
-# Ignorar arquivos de depuração
-*.pdb
-*.exe
-*.dll
-
-# Ignorar pastas de pacotes NuGet
-.nuget/
-packages/
-
-# Ignorar arquivos de ambiente
-.env
-.env.local
-
-# Ignorar arquivos gerados pelo IDE
-.vs/
-.vscode/
