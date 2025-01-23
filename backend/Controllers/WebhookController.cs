@@ -18,8 +18,9 @@ namespace WebhookApp.Controllers
     public class WebhookController : ControllerBase
     {
         public static  WebhookEvent _lastPayload { get; set; }
-        //public static ReceiveFlowiseMessage receive { get; set; }
+        public static ReceiveFlowiseMessage receive { get; set; }
         public static string _phone;
+        public static string _number;
 
         private readonly IHttpClientFactory _httpClientFactory;
         public WebhookController(IHttpClientFactory httpClientFactory)
@@ -34,9 +35,8 @@ namespace WebhookApp.Controllers
 
             //Console.WriteLine($"Evento: {payload.Data.Message.Conversation.ToString()}");
             var message = _lastPayload.Data.Message.Conversation;
-            var number = _lastPayload.Data.Key.RemoteJid;
-            var _phone = ExtrairNumero(number);
-            var contactName = _lastPayload.Data.PushName;
+            _number = _lastPayload.Data.Key.RemoteJid;
+            var _phone = ExtrairNumero(_number);  
 
             var status =  await SendMessageFlowise(_phone,message);
             //HttpStatusCode statuss = await SendMessage(phone, message);
@@ -95,10 +95,16 @@ namespace WebhookApp.Controllers
             //client.DefaultRequestHeaders.Add("apikey", "wtwHLYfFxI9n1zDR8zFFqNq8kVaWqdD2oLpcjVmXBu");
             client.DefaultRequestHeaders.Add("User-Agent", "zaptend");
 
+            var idSession = _number;
 
+          
             var messageChat = new SendFlowiseMessage
             {
                question = message,
+                overrideConfig = new overrideConfig
+                {
+                    sessionId = idSession
+                }
 
             };
             string json = JsonConvert.SerializeObject(messageChat);
@@ -114,7 +120,7 @@ namespace WebhookApp.Controllers
             var messageText = JsonConvert.DeserializeObject<ReceiveFlowiseMessage>(responseBody);
 
             var Text = messageText.text;
-            var id = messageText.sessionId;
+            //var id = messageText.sessionId;
 
             var sendMessage = new SendMessage
             {
@@ -135,9 +141,12 @@ namespace WebhookApp.Controllers
 
 
             //JsonConvert.DeserializeObject<T>()
-            var responseBodyy = await response.Content.ReadAsStringAsync();
 
-            return responseBody;
+            return JsonConvert.SerializeObject(new
+            {
+                sessionId = idSession,
+                response = responseBody
+            });
 
         }
 
