@@ -14,7 +14,6 @@ namespace backend
             var builder = WebApplication.CreateBuilder(args);
             builder.Services.AddControllers();
             builder.Services.AddHttpClient();
-            builder.Services.AddHttpClient();
             builder.Services.AddCors(options =>
             {
                 options.AddPolicy("AllowAll", policy =>
@@ -50,7 +49,7 @@ namespace backend
     });
 
 
-                var response = await client.PostAsync("https://evolutionzap.apievolution.shop/instance/create", postForm);
+                var response = await client.PostAsync("https://apizap.staranytech.fun/instance/create", postForm);
 
                 if (!response.IsSuccessStatusCode)
                 {
@@ -98,7 +97,7 @@ namespace backend
                 client.DefaultRequestHeaders.Add("apikey", "wtwHLYfFxI9n1zDR8zFFqNq8kVaWqdD2oLpcjVmXBu");
                 client.DefaultRequestHeaders.Add("User-Agent", "PixPaymentIntegrationTest");
 
-                string url = $"https://evolutionzap.apievolution.shop/instance/delete/{instanceName}";
+                string url = $"https://apizap.staranytech.fun/instance/delete/{instanceName}";
 
                 var response = await client.DeleteAsync(url);
 
@@ -141,7 +140,7 @@ namespace backend
                 
                 var jsonContent = new StringContent(json, Encoding.UTF8, "application/json");
 
-                var response = await client.PostAsync($"https://evolutionzap.apievolution.shop/webhook/set/{instanceName}", jsonContent);
+                var response = await client.PostAsync($"https://apizap.staranytech.fun/webhook/set/{instanceName}", jsonContent);
 
                 if (!response.IsSuccessStatusCode)
                 { 
