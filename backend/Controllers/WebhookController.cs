@@ -21,6 +21,7 @@ namespace WebhookApp.Controllers
         public static ReceiveFlowiseMessage receive { get; set; }
         public static string _phone;
         public static string _number;
+        public static string _instance;
 
         private readonly IHttpClientFactory _httpClientFactory;
         public WebhookController(IHttpClientFactory httpClientFactory)
@@ -36,12 +37,13 @@ namespace WebhookApp.Controllers
             //Console.WriteLine($"Evento: {payload.Data.Message.Conversation.ToString()}");
             var message = _lastPayload.Data.Message.Conversation;
             _number = _lastPayload.Data.Key.RemoteJid;
-            var _phone = ExtrairNumero(_number);  
+            var _phone = ExtrairNumero(_number);
+            _instance = _lastPayload.Instance;
 
             var status =  await SendMessageFlowise(_phone,message);
             //HttpStatusCode statuss = await SendMessage(phone, message);
 
-            return Ok(new { Message = "Webhook recebido com sucesso!" });
+            return Ok();
         }
 
         public static string ExtrairNumero(string input)
@@ -74,7 +76,7 @@ namespace WebhookApp.Controllers
             var jsonContent = new StringContent(json, Encoding.UTF8, "application/json");
 
 
-            var response = await client.PostAsync("https://apizap.staranytech.fun/message/sendText/star", jsonContent);
+            var response = await client.PostAsync($"https://apizap.staranytech.fun/message/sendText/{_instance}", jsonContent);
 
             if (!response.IsSuccessStatusCode)
             {
@@ -113,7 +115,7 @@ namespace WebhookApp.Controllers
             var jsonContent = new StringContent(json, Encoding.UTF8, "application/json");
 
 
-            var response = await client.PostAsync("https://flowise.staranytech.fun/api/v1/prediction/5a62edf6-3312-4567-a30c-37349592c069", jsonContent);
+            var response = await client.PostAsync($"https://flowise.staranytech.fun/api/v1/prediction/{_instance}", jsonContent);
 
            
             var responseBody = await response.Content.ReadAsStringAsync();
