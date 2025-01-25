@@ -1,10 +1,13 @@
 ﻿using APIWhatssApp.Models;
 using backend.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Net;
 using System.Net.Http;
+using System.Net.Http.Json;
 using System.Numerics;
 using System.Text;
 using System.Xml.Schema;
@@ -22,11 +25,13 @@ namespace WebhookApp.Controllers
         public static string _phone;
         public static string _number;
         public static string _instance;
+        private readonly IConfiguration _configuration;
 
         private readonly IHttpClientFactory _httpClientFactory;
-        public WebhookController(IHttpClientFactory httpClientFactory)
+        public WebhookController(IHttpClientFactory httpClientFactory, IConfiguration configuration)
         {
             _httpClientFactory = httpClientFactory;
+            _configuration = configuration;
         }
 
         [HttpPost]
@@ -40,8 +45,12 @@ namespace WebhookApp.Controllers
             var _phone = ExtrairNumero(_number);
             _instance = _lastPayload.Instance;
 
+           // string url = $"https://evolutionzap.apievolution.shop/instance/connect/{instanceName}/?number={Uri.EscapeDataString(number)}";
+
+
+            
             var status =  await SendMessageFlowise(_phone,message);
-            //HttpStatusCode statuss = await SendMessage(phone, message);
+            
 
             return Ok();
         }
@@ -88,8 +97,60 @@ namespace WebhookApp.Controllers
             var responseBody = await response.Content.ReadAsStringAsync();
             return response.StatusCode;
         }
+        [HttpPost]
+        [Route("api")]
+        public async Task <HttpStatusCode> ModifyPrompt(string prompt,string chatId)
+            //,string nameChat,string idChatFlow)
+        {
+            var client = _httpClientFactory.CreateClient();
+            //client.DefaultRequestHeaders.Add("Authorization", "Bearer dZtUF5z6p4caAoapNrnHiLrGaTV6z2zvQY207nIK85M");
+            var response = await client.GetAsync($"https://flowise.staranytech.fun/api/v1/chatflows/{chatId}");
+            var chatFlow = _configuration.GetSection("ChatFlow").Get<ChatFlow>();
+            JObject flowData = JObject.Parse(chatFlow.FlowData);
+            var idChat = flowData["id"]?.ToString(); // Acessa o Id
+            var chatName = flowData["name"]?.ToString(); // Acessa o Name
 
+            // Exemplo de modificação do Id e Name
+            //flowData["id"] = idChatFlow; 
+            //flowData["name"] = nameChat;
+            //var responseBody = await response.Content.ReadAsStringAsync();
+            //JObject jsonObject = JObject.Parse(chatFlow);
+            //JObject dataFlow = JObject.Parse(flowData["flowData"].ToString());
 
+            if (flowData["nodes"] is JArray nodes)
+            {
+                foreach (var node in nodes)
+                {
+                    
+                    if ((string)node["id"] == "conversationalAgent_0")
+                    {
+                        
+                        if (node["data"]?["inputs"]?["systemMessage"] != null)
+                        {
+                            
+                            node["data"]["inputs"]["systemMessage"] = prompt;
+                            break;
+                        }
+                        else
+                        {
+                            return response.StatusCode;
+                        }
+                    }
+                }
+            }
+            else
+            {
+                return response.StatusCode;
+            }
+
+            flowData["flowData"] = flowData.ToString(Formatting.None);
+
+            // Serializar o JSON atualizado de volta para uma string
+            string jsonAtualizado = flowData.ToString(Formatting.Indented);
+            // Serializar de volta para JSON formatado
+            return response.StatusCode;
+
+        }
         public async Task<string> SendMessageFlowise(string _phone,string message)
         {
             var client = _httpClientFactory.CreateClient();
@@ -153,5 +214,24 @@ namespace WebhookApp.Controllers
         }
 
     }
+    public class ChatFlow
+    {
+        public string Id { get; set; }
+        public string Name { get; set; }
+        public string FlowData { get; set; }
+        public bool Deployed { get; set; }
+        public bool IsPublic { get; set; }
+        public string ApiKeyId { get; set; }
+        public string ChatbotConfig { get; set; }
+        public string ApiConfig { get; set; }
+        public string Analytic { get; set; }
+        public string SpeechToText { get; set; }
+        public string FollowUpPrompts { get; set; }
+        public string Category { get; set; }
+        public string Type { get; set; }
+        public DateTime CreatedDate { get; set; }
+        public DateTime UpdatedDate { get; set; }
+    }
+
 }
 
