@@ -20,6 +20,7 @@ namespace WebhookApp.Controllers
     [Route("zaptend")]
     public class WebhookController : ControllerBase
     {
+
         public static  WebhookEvent _lastPayload { get; set; }
         public static ReceiveFlowiseMessage receive { get; set; }
         public static string _phone;
@@ -28,20 +29,23 @@ namespace WebhookApp.Controllers
         private readonly IConfiguration _configuration;
 
         private readonly IHttpClientFactory _httpClientFactory;
-        public WebhookController(IHttpClientFactory httpClientFactory, IConfiguration configuration)
+        private readonly ILogger<WebhookController> _logger;
+        public WebhookController(IHttpClientFactory httpClientFactory, IConfiguration configuration, ILogger<WebhookController> logger)
         {
             _httpClientFactory = httpClientFactory;
             _configuration = configuration;
+            _logger = logger;
         }
 
         [HttpPost]
+        [Route("webhook")]
         public async Task<IActionResult> ReceiveWebhook([FromBody] WebhookEvent payload)
         {
              _lastPayload = payload;
 
             //Console.WriteLine($"Evento: {payload.Data.Message.Conversation.ToString()}");
             var message = _lastPayload.Data.Message.Conversation;
-            _instanceId = _lastPayload.Data.InstanceId;
+            _instanceId = _lastPayload.Data.Key.RemoteJid;
             var _phone = ExtrairNumero(_instanceId);
             _instance = _lastPayload.Instance;
 
@@ -91,7 +95,10 @@ namespace WebhookApp.Controllers
             {
 
                 return response.StatusCode;
+               
+
             }
+            _logger.LogInformation("Requisição na api Evolution bem sucedida");
 
             //JsonConvert.DeserializeObject<T>()
             var responseBody = await response.Content.ReadAsStringAsync();
@@ -173,7 +180,7 @@ namespace WebhookApp.Controllers
             var jsonContent = new StringContent(json, Encoding.UTF8, "application/json");
 
 
-            var response = await client.PostAsync($"https://flowise.staranytech.fun/api/v1/prediction/{_instance}", jsonContent);
+            var response = await client.PostAsync($"https://flowise.staranytech.fun/api/v1/prediction/5a62edf6-3312-4567-a30c-37349592c069", jsonContent);
 
            
             var responseBody = await response.Content.ReadAsStringAsync();

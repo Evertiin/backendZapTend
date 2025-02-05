@@ -4,14 +4,28 @@ using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
 using System.Text;
 using WebhookApp.Controllers;
+using Serilog;
 
 namespace backend
 {
     public class Program
     {
+
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
+
+            builder.Host.UseSerilog((context, loggerConfiguration) =>
+            {
+                loggerConfiguration
+                    .WriteTo.Console()
+                    .WriteTo.File("logs/app.log", rollingInterval: RollingInterval.Day)
+                    .Enrich.FromLogContext()
+                    .ReadFrom.Configuration(context.Configuration);
+            });
+
+            Log.Information("Server is starting...");
+
             builder.Services.AddControllers();
             builder.Services.AddHttpClient();
             builder.Services.AddCors(options =>
@@ -155,6 +169,7 @@ namespace backend
 
             //app.UseHttpsRedirection();
             app.UseCors("AllowAll");
+            app.UseSerilogRequestLogging(); // Loga requisições HTTP automaticamente
             app.MapControllers();
             app.Run();
         }
