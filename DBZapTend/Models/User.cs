@@ -11,19 +11,17 @@ public partial class User
 
     public string Email { get; set; }
 
-    public long CpfCnpj { get; set; }
+    public string CpfCnpj { get; set; }
 
     public long Telephone { get; set; }
 
-    public string Adress { get; set; }
+    public string Address { get; set; }
 
     public string IdAutentication { get; set; }
 
-    public string Sobrenome { get; set; }
 
     public DateTime? CreatedAt { get; set; }
 
-    public string Password { get; set; }
 
     public string Role { get; set; }
 

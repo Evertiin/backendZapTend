@@ -37,7 +37,7 @@ public partial class DbzapContext : DbContext
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseNpgsql("Host=localhost;Database=dbzaptend;Username=postgres;Password=staranytecheverton");
+        => optionsBuilder.UseNpgsql("Host=192.168.3.100;Database=dbzaptend;Username=postgres;Password=staranytecheverton");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -170,7 +170,7 @@ public partial class DbzapContext : DbContext
             entity.HasIndex(e => e.IdAutentication, "User_IdAutentication_unique").IsUnique();
 
             entity.Property(e => e.IdAutentication).HasMaxLength(100);
-            entity.Property(e => e.Adress)
+            entity.Property(e => e.Address)
                 .IsRequired()
                 .HasMaxLength(100);
             entity.Property(e => e.CreatedAt)
@@ -184,13 +184,13 @@ public partial class DbzapContext : DbContext
             entity.Property(e => e.Name)
                 .IsRequired()
                 .HasMaxLength(45);
-            entity.Property(e => e.Password)
-                .HasMaxLength(255)
-                .HasColumnName("password");
+            //entity.Property(e => e.Password)
+                //.HasMaxLength(255)
+                //.HasColumnName("password");
             entity.Property(e => e.Role).HasMaxLength(50);
-            entity.Property(e => e.Sobrenome)
-                .HasMaxLength(255)
-                .HasColumnName("sobrenome");
+            //entity.Property(e => e.Sobrenome)
+                //.HasMaxLength(255)
+                //.HasColumnName("sobrenome");
         });
 
         modelBuilder.Entity<UserNicho>(entity =>

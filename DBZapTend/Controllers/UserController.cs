@@ -39,7 +39,7 @@ namespace DBZapTend.Controllers
                 return StatusCode(500, $"COD:1001-5,Erro interno ao buscar usuários");
             }
         }
-        [Authorize(Roles = "User,Admin")]
+        //[Authorize(Roles = "User,Admin")]
         [HttpPost]
         public async Task<ActionResult<User>> CreateUsers([FromBody] UpdateUserDto userDto)
         {
@@ -56,8 +56,8 @@ namespace DBZapTend.Controllers
                     Name = userDto.Name,
                     Email = userDto.Email,
                     IdAutentication = userDto.IdAutentication,
-                    Adress = userDto.Adress,
-                    CpfCnpj = userDto.CpfCnpj ?? 0,
+                    Address = userDto.Address,
+                    CpfCnpj = userDto.CpfCnpj,
                     Telephone = userDto.Telephone ?? 0,
                     Role = userDto.Role
                 };
@@ -126,9 +126,9 @@ namespace DBZapTend.Controllers
                     findUser.Role = user.Role;
                 }
 
-                if (user.CpfCnpj.HasValue)
+                if (!string.IsNullOrWhiteSpace(user.CpfCnpj));
                 {
-                    findUser.CpfCnpj = user.CpfCnpj.Value;
+                    findUser.CpfCnpj = user.CpfCnpj;
                 }
 
                 if (user.Telephone.HasValue)
@@ -136,9 +136,9 @@ namespace DBZapTend.Controllers
                     findUser.Telephone = user.Telephone.Value;
                 }
 
-                if (!string.IsNullOrWhiteSpace(user.Adress))
+                if (!string.IsNullOrWhiteSpace(user.Address))
                 {
-                    findUser.Adress = user.Adress;
+                    findUser.Address = user.Address;
                 }
 
                 await _repository.UpdateUsers(findUser);

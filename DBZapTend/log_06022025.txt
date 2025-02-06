@@ -1,0 +1,4 @@
+06/02/2025 16:32:14: COD:1001-2 ,Usuários coletado com sucesso
+06/02/2025 16:33:07: COD:1011-4 ,Usuário não cadastrado ou credenciais incorretas
+06/02/2025 16:34:11: COD:1011-4 ,Usuário não cadastrado ou credenciais incorretas
+06/02/2025 16:34:16: COD:1001-2 ,Usuário criado com sucesso
