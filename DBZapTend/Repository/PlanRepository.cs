@@ -14,13 +14,11 @@ namespace DBZapTend.Repository
         public async Task<IEnumerable<Plan>> GetPlans()
         {
             return await _context.Plans
-                 .Include(u => u.Payments)
                  .ToListAsync();
         }
         public async Task<Plan> GetPlan(int id)
         {
             return await _context.Plans
-                 .Include(u => u.Payments)
                  .FirstOrDefaultAsync(u => u.Id == id);
         }
 

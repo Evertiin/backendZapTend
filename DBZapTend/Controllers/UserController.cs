@@ -57,6 +57,7 @@ namespace DBZapTend.Controllers
                     Email = userDto.Email,
                     IdAutentication = userDto.IdAutentication,
                     Address = userDto.Address,
+                    PlanId = userDto.PlanId,
                     CpfCnpj = userDto.CpfCnpj,
                     Telephone = userDto.Telephone ?? 0,
                     Role = userDto.Role
@@ -97,7 +98,7 @@ namespace DBZapTend.Controllers
                 
             }
         }
-        [Authorize(Roles = "Admin,User")]
+        //[Authorize(Roles = "Admin,User")]
         [HttpPatch("{id:minlength(3):maxlength(100)}")]
         public async Task<ActionResult<User>> UpdateUser(string id, [FromBody] UpdateUserDto user)
         {
@@ -151,7 +152,7 @@ namespace DBZapTend.Controllers
                 return StatusCode(500, "COD:1001-5, Erro interno ao Atualizar Usuário");
             }
         }
-        [Authorize(Roles = "Admin,User")]
+        //[Authorize(Roles = "Admin,User")]
         [HttpDelete("{id:minlength(3):maxlength(100)}")]
         public async Task<ActionResult<User>> DeleteUser(string id)
         {

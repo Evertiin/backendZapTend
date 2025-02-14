@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace DBZapTend.Controllers
 {
-    [Authorize(Roles = "User,Admin")]
+    //[Authorize(Roles = "User,Admin")]
     [ApiController]
     [Route("api/[controller]")]
     public class NichoController : Controller

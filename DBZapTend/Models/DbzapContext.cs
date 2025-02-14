@@ -37,7 +37,7 @@ public partial class DbzapContext : DbContext
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseNpgsql("Host=192.168.3.100;Database=dbzaptend;Username=postgres;Password=staranytecheverton");
+        => optionsBuilder.UseNpgsql("Host=ep-royal-leaf-a4nwrsj1-pooler.us-east-1.aws.neon.tech;Database=neondb;Username=neondb_owner;Password=npg_jKxgryB0Swv3;SSL Mode=Require;Trust Server Certificate=true");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -70,7 +70,7 @@ public partial class DbzapContext : DbContext
                 .HasForeignKey(d => d.UserIduser)
                 .HasConstraintName("fk_instance_user");
         });
-
+        
         modelBuilder.Entity<Nicho>(entity =>
         {
             entity.HasKey(e => e.IdNichos).HasName("Nichos_pkey");
@@ -111,10 +111,6 @@ public partial class DbzapContext : DbContext
                 .HasColumnName("User_Id");
             entity.Property(e => e.ValuePayment).HasPrecision(10, 2);
 
-            entity.HasOne(d => d.Plan).WithMany(p => p.Payments)
-                .HasForeignKey(d => d.PlanId)
-                .HasConstraintName("fk_Payments_Plan1");
-
             entity.HasOne(d => d.User).WithMany(p => p.Payments)
                 .HasForeignKey(d => d.UserId)
                 .HasConstraintName("fk_Payments_User1");
@@ -126,21 +122,7 @@ public partial class DbzapContext : DbContext
 
             entity.ToTable("Plan", "mydb");
 
-            entity.Property(e => e.Name)
-                .IsRequired()
-                .HasMaxLength(45);
-            entity.Property(e => e.Price).HasPrecision(10, 2);
-            entity.Property(e => e.SubscribeAt)
-                .HasDefaultValueSql("CURRENT_TIMESTAMP")
-                .HasColumnType("timestamp without time zone")
-                .HasColumnName("subscribeAt");
-            entity.Property(e => e.UserId)
-                .HasMaxLength(100)
-                .HasColumnName("user_Id");
-
-            entity.HasOne(d => d.User).WithMany(p => p.Plans)
-                .HasForeignKey(d => d.UserId)
-                .HasConstraintName("fk_Plan_user1");
+        
         });
 
         modelBuilder.Entity<Prompt>(entity =>

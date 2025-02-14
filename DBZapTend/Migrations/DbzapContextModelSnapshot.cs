@@ -153,30 +153,26 @@ namespace DBZapTend.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(45)
-                        .HasColumnType("character varying(45)");
+                    b.Property<int>("AmountInstance")
+                        .HasColumnType("integer");
 
-                    b.Property<decimal>("Price")
-                        .HasPrecision(10, 2)
-                        .HasColumnType("numeric(10,2)");
+                    b.Property<string>("Annually")
+                        .HasColumnType("text");
 
-                    b.Property<DateTime?>("SubscribeAt")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("timestamp without time zone")
-                        .HasColumnName("subscribeAt")
-                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
+                    b.Property<string>("DiscountAnnually")
+                        .HasColumnType("text");
 
-                    b.Property<string>("UserId")
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)")
-                        .HasColumnName("user_Id");
+                    b.Property<string>("DiscountMonthly")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Monthly")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Title")
+                        .HasColumnType("text");
 
                     b.HasKey("Id")
                         .HasName("Plan_pkey");
-
-                    b.HasIndex("UserId");
 
                     b.ToTable("Plan", "mydb");
                 });
@@ -209,68 +205,6 @@ namespace DBZapTend.Migrations
                     b.HasIndex("NichosIdNichos");
 
                     b.ToTable("Prompts", "mydb");
-                });
-
-            modelBuilder.Entity("DBZapTend.Models.User", b =>
-                {
-                    b.Property<string>("IdAutentication")
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
-
-                    b.Property<string>("Adress")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
-
-                    b.Property<string>("CpfCnpj")
-                        .HasColumnType("text");
-
-                    b.Property<DateTime?>("CreatedAt")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("timestamp without time zone")
-                        .HasColumnName("createdAt")
-                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
-
-                    b.Property<string>("Email")
-                        .IsRequired()
-                        .HasMaxLength(45)
-                        .HasColumnType("character varying(45)");
-
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(45)
-                        .HasColumnType("character varying(45)");
-
-                    b.Property<string>("Password")
-                        .HasMaxLength(255)
-                        .HasColumnType("character varying(255)")
-                        .HasColumnName("password");
-
-                    b.Property<string>("Role")
-                        .HasMaxLength(50)
-                        .HasColumnType("character varying(50)");
-
-                    b.Property<string>("Sobrenome")
-                        .HasMaxLength(255)
-                        .HasColumnType("character varying(255)")
-                        .HasColumnName("sobrenome");
-
-                    b.Property<long>("Telephone")
-                        .HasColumnType("bigint");
-
-                    b.HasKey("IdAutentication")
-                        .HasName("User_IdAutentication_pkey");
-
-                    b.HasIndex(new[] { "IdAutentication" }, "User_IdAutentication_unique")
-                        .IsUnique();
-
-                    b.ToTable("User", "mydb");
                 });
 
             modelBuilder.Entity("DBZapTend.Models.UserNicho", b =>
@@ -370,9 +304,67 @@ namespace DBZapTend.Migrations
                     b.ToTable("Variaveis", "mydb");
                 });
 
+            modelBuilder.Entity("User", b =>
+                {
+                    b.Property<string>("IdAutentication")
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<string>("Address")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<string>("CpfCnpj")
+                        .HasColumnType("text");
+
+                    b.Property<DateTime?>("CreatedAt")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp without time zone")
+                        .HasColumnName("createdAt")
+                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasMaxLength(45)
+                        .HasColumnType("character varying(45)");
+
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(45)
+                        .HasColumnType("character varying(45)");
+
+                    b.Property<int>("PlanId")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Role")
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
+
+                    b.Property<long>("Telephone")
+                        .HasColumnType("bigint");
+
+                    b.HasKey("IdAutentication")
+                        .HasName("User_IdAutentication_pkey");
+
+                    b.HasIndex("PlanId")
+                        .IsUnique();
+
+                    b.HasIndex(new[] { "IdAutentication" }, "User_IdAutentication_unique")
+                        .IsUnique();
+
+                    b.ToTable("User", "mydb");
+                });
+
             modelBuilder.Entity("DBZapTend.Models.Instance", b =>
                 {
-                    b.HasOne("DBZapTend.Models.User", "UserIduserNavigation")
+                    b.HasOne("User", "UserIduserNavigation")
                         .WithMany("Instances")
                         .HasForeignKey("UserIduser")
                         .HasConstraintName("fk_instance_user");
@@ -393,26 +385,15 @@ namespace DBZapTend.Migrations
             modelBuilder.Entity("DBZapTend.Models.Payment", b =>
                 {
                     b.HasOne("DBZapTend.Models.Plan", "Plan")
-                        .WithMany("Payments")
-                        .HasForeignKey("PlanId")
-                        .HasConstraintName("fk_Payments_Plan1");
+                        .WithMany()
+                        .HasForeignKey("PlanId");
 
-                    b.HasOne("DBZapTend.Models.User", "User")
+                    b.HasOne("User", "User")
                         .WithMany("Payments")
                         .HasForeignKey("UserId")
                         .HasConstraintName("fk_Payments_User1");
 
                     b.Navigation("Plan");
-
-                    b.Navigation("User");
-                });
-
-            modelBuilder.Entity("DBZapTend.Models.Plan", b =>
-                {
-                    b.HasOne("DBZapTend.Models.User", "User")
-                        .WithMany("Plans")
-                        .HasForeignKey("UserId")
-                        .HasConstraintName("fk_Plan_user1");
 
                     b.Navigation("User");
                 });
@@ -434,7 +415,7 @@ namespace DBZapTend.Migrations
                         .HasForeignKey("NichosIdNichos")
                         .HasConstraintName("fk_User_Nichos_Nichos1");
 
-                    b.HasOne("DBZapTend.Models.User", "User")
+                    b.HasOne("User", "User")
                         .WithMany("UserNichos")
                         .HasForeignKey("UserId")
                         .HasConstraintName("fk_User_Nichos_User1");
@@ -451,7 +432,7 @@ namespace DBZapTend.Migrations
                         .HasForeignKey("PromptsIdPrompts")
                         .HasConstraintName("fk_Valores_Variaveis_Prompts1");
 
-                    b.HasOne("DBZapTend.Models.User", "User")
+                    b.HasOne("User", "User")
                         .WithMany("ValoresVariaveis")
                         .HasForeignKey("UserId")
                         .HasConstraintName("fk_Valores_Variaveis_User1");
@@ -478,6 +459,17 @@ namespace DBZapTend.Migrations
                     b.Navigation("PromptsIdPromptsNavigation");
                 });
 
+            modelBuilder.Entity("User", b =>
+                {
+                    b.HasOne("DBZapTend.Models.Plan", "Plan")
+                        .WithOne("User")
+                        .HasForeignKey("User", "PlanId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Plan");
+                });
+
             modelBuilder.Entity("DBZapTend.Models.Category", b =>
                 {
                     b.Navigation("Nichos");
@@ -492,7 +484,7 @@ namespace DBZapTend.Migrations
 
             modelBuilder.Entity("DBZapTend.Models.Plan", b =>
                 {
-                    b.Navigation("Payments");
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("DBZapTend.Models.Prompt", b =>
@@ -502,21 +494,19 @@ namespace DBZapTend.Migrations
                     b.Navigation("Variaveis");
                 });
 
-            modelBuilder.Entity("DBZapTend.Models.User", b =>
+            modelBuilder.Entity("DBZapTend.Models.Variavei", b =>
+                {
+                    b.Navigation("ValoresVariaveis");
+                });
+
+            modelBuilder.Entity("User", b =>
                 {
                     b.Navigation("Instances");
 
                     b.Navigation("Payments");
 
-                    b.Navigation("Plans");
-
                     b.Navigation("UserNichos");
 
-                    b.Navigation("ValoresVariaveis");
-                });
-
-            modelBuilder.Entity("DBZapTend.Models.Variavei", b =>
-                {
                     b.Navigation("ValoresVariaveis");
                 });
 #pragma warning restore 612, 618

@@ -1,0 +1,28 @@
+13/02/2025 10:54:56: COD:1001-2 ,Usuários coletado com sucesso
+13/02/2025 10:55:35: COD:1001-2 ,Usuário criado com sucesso
+13/02/2025 12:50:16: COD:1006-5 ,Erro interno ao criar plano: An error occurred while saving the entity changes. See the inner exception for details.
+13/02/2025 12:54:53: COD:1006-2 ,Plano criado com sucesso
+13/02/2025 12:56:06: COD:1006-2 ,Planos coletados com sucesso
+13/02/2025 12:57:11: COD:1006-5 ,Erro interno ao buscar planos: Unable to determine the relationship represented by navigation 'Plan.User' of type 'User'. Either manually configure the relationship, or ignore this property using the '[NotMapped]' attribute or by using 'EntityTypeBuilder.Ignore' in 'OnModelCreating'.
+13/02/2025 12:57:25: COD:1006-5 ,Erro interno ao buscar planos: Unable to determine the relationship represented by navigation 'Plan.User' of type 'User'. Either manually configure the relationship, or ignore this property using the '[NotMapped]' attribute or by using 'EntityTypeBuilder.Ignore' in 'OnModelCreating'.
+13/02/2025 12:57:59: COD:1006-2 ,Planos coletados com sucesso
+13/02/2025 13:00:04: COD:1006-2 ,Planos coletados com sucesso
+13/02/2025 13:26:41: COD:1006-2 ,Planos coletados com sucesso
+13/02/2025 13:28:25: COD:1006-2 ,Planos coletados com sucesso
+13/02/2025 13:28:45: COD:1001-2 ,Usuários coletado com sucesso
+13/02/2025 13:30:59: COD:1006-2 ,Planos coletados com sucesso
+13/02/2025 13:32:21: COD:1001-2 ,Usuários coletado com sucesso
+13/02/2025 13:32:32: COD:1006-2 ,Planos coletados com sucesso
+13/02/2025 13:34:08: COD:1006-2 ,Planos coletados com sucesso
+13/02/2025 13:49:26: COD:1006-5 ,Erro interno ao buscar planos: 42703: column p.UserIdAutentication does not exist
+
+POSITION: 117
+13/02/2025 13:51:04: COD:1001-5,Erro interno ao buscar usuários: 42703: column p0.UserIdAutentication does not exist
+
+POSITION: 800
+13/02/2025 13:55:05: COD:1006-5 ,Erro interno ao buscar planos: 42703: column p.UserIdAutentication does not exist
+
+POSITION: 117
+13/02/2025 13:55:23: COD:1001-5,Erro interno ao buscar usuários: 42703: column p0.UserIdAutentication does not exist
+
+POSITION: 813

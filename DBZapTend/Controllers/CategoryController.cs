@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace DBZapTend.Controllers
 {
-    [Authorize(Roles = "Admin")]
+    //[Authorize(Roles = "Admin")]
     [ApiController]
     [Route("api/[controller]")]
     public class CategoryController : Controller

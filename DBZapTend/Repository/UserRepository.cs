@@ -17,7 +17,7 @@ namespace DBZapTend.Repository
         {
             return await _context.Users.Include(u => u.Instances)
                 .Include(u => u.Payments)
-                .Include(u => u.Plans)
+                .Include(u => u.Plan)
                 .Include(u => u.UserNichos)
                 .Include(u => u.ValoresVariaveis)
                 .ToListAsync();
@@ -28,7 +28,7 @@ namespace DBZapTend.Repository
             var userWithInstances = await _context.Users
              .Include(u => u.Instances)
              .Include(u => u.Payments) 
-             .Include(u => u.Plans)    
+             .Include(u => u.PlanId)    
              .Include(u => u.UserNichos) 
              .Include(u => u.ValoresVariaveis)
              .FirstOrDefaultAsync(u => u.IdAutentication == id);
