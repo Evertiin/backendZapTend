@@ -13,6 +13,8 @@ public class User
     public string IdAutentication { get; set; }
     public DateTime? CreatedAt { get; set; }
     public string Role { get; set; }
+    public bool TermsAccepted { get; set; }
+    public string TermsVersion { get; set; }
 
     public virtual ICollection<Instance> Instances { get; set; } = new List<Instance>();
     public virtual ICollection<Payment> Payments { get; set; } = new List<Payment>();

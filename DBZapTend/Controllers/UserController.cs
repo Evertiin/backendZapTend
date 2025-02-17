@@ -58,6 +58,8 @@ namespace DBZapTend.Controllers
                     IdAutentication = userDto.IdAutentication,
                     Address = userDto.Address,
                     PlanId = userDto.PlanId,
+                    TermsAccepted = userDto.TermsAccepted,
+                    TermsVersion = userDto.TermsVersion,
                     CpfCnpj = userDto.CpfCnpj,
                     Telephone = userDto.Telephone ?? 0,
                     Role = userDto.Role
@@ -140,6 +142,11 @@ namespace DBZapTend.Controllers
                 if (!string.IsNullOrWhiteSpace(user.Address))
                 {
                     findUser.Address = user.Address;
+                }
+
+                if (user.PlanId.HasValue)
+                {
+                    findUser.PlanId = user.PlanId.Value;
                 }
 
                 await _repository.UpdateUsers(findUser);
